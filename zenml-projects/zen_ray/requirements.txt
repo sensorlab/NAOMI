@@ -1,0 +1,15 @@
+zenml[server]
+ray[data,train,tune,serve] == 2.6.3
+scikit-learn
+torch
+torchvision
+pillow
+requests
+starlette
+evaluate
+transformers
+fastapi
+mlflow 
+keras 
+tensorflow
+python-multipart
