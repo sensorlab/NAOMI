@@ -2,7 +2,7 @@ import keras
 from zenml import step
 
 
-@step(enable_cache=False)
+@step()
 def deploy(model: keras.Sequential) -> None:
     import keras
     import ray
@@ -16,7 +16,7 @@ def deploy(model: keras.Sequential) -> None:
     
     app = FastAPI(debug=True)
 
-    @serve.deployment(name="mnist", num_replicas=1, ray_actor_options={"num_cpus": 1, "num_gpus": 0})
+    @serve.deployment(name="mnist", num_replicas=1, ray_actor_options={"num_cpus": 0.2, "num_gpus": 0})
     @serve.ingress(app)
     class Hello:
         def __init__(self):
@@ -55,7 +55,7 @@ def deploy(model: keras.Sequential) -> None:
         
 
     ray.init(address="ray://193.2.205.27:10001", ignore_reinit_error=True)
-    serve.run(Hello.bind())
+    serve.run(Hello.bind(), name="mnist", route_prefix="/mnist")
     serve.delete("text_ml_app") # placeholder removal
 
 

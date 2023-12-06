@@ -8,9 +8,9 @@ import numpy as np
 import mlflow.keras
 
  
-@step(enable_cache=True)
+@step()
 def train(x_train: np.ndarray, y_train: np.ndarray) -> keras.Sequential:
-    @ray.remote(num_cpus=4)
+    @ray.remote(num_cpus=2)
     def remo_train(x, y):
         import keras
         from keras import layers
@@ -45,7 +45,7 @@ def train(x_train: np.ndarray, y_train: np.ndarray) -> keras.Sequential:
         """
 
         batch_size = 128
-        epochs = 1
+        epochs = 5
 
         model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 
@@ -56,7 +56,7 @@ def train(x_train: np.ndarray, y_train: np.ndarray) -> keras.Sequential:
         # model_uri = mlflow.get_artifact_uri("model")
         return model
 
-    ray.init(address="ray://193.2.205.27:10001")
+    ray.init(address="ray://193.2.205.27:10001", ignore_reinit_error=True)
     model_uri = remo_train.remote(x_train, y_train)
     model_uri = ray.get(model_uri)
     # mlflow.keras.log_model(model_uri, "mnist")

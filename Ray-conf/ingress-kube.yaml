@@ -3,8 +3,6 @@ kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
-#    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-#    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
     # Any characters captured by (.*) will be assigned to the placeholder $1, which is then used as a parameter in the rewrite-target annotation
     # For example, the ingress definition above will result in the following rewrites:
     # $IP/$CLUSTER_NAME/ rewrites to $IP/ ($1 maps to nothing)
@@ -25,16 +23,6 @@ spec:
 
         path: /ray/(.*) # (.*) is regex
         pathType: Exact # Matches the URL path exactly and with case sensitivity.
-
-      - backend:
-          service:
-            name: ray-serve-head-svc
-            port:
-              number: 10001
-
-        path: /ray-cluster/(.*)
-        pathType: Exact
-
       - backend:
           service:
             name: ray-serve-serve-svc

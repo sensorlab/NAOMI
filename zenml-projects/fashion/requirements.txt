@@ -1,0 +1,11 @@
+zenml[server]
+ray[data,train,tune,serve] == 2.6.3
+pillow
+requests
+starlette
+evaluate
+fastapi
+mlflow
+tensorflow
+python-multipart
+numpy
