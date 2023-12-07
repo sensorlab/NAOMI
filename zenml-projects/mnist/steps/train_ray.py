@@ -1,26 +1,22 @@
-import logging
-
 import keras
-from zenml import step
+from zenml import step, ArtifactConfig
 import ray
-from typing import Any, Dict, Optional
+from typing import Annotated
 import numpy as np
-import mlflow.keras
 
- 
 @step()
-def train(x_train: np.ndarray, y_train: np.ndarray) -> keras.Sequential:
+def train(x_train: np.ndarray, y_train: np.ndarray) \
+        -> Annotated[keras.Sequential, ArtifactConfig(name="mnist_model", is_model_artifact=True)]:
     @ray.remote(num_cpus=2)
     def remo_train(x, y):
         import keras
         from keras import layers
-        import mlflow
-        import numpy as np
-        import mlflow.keras
-
-        mlflow.set_tracking_uri("http://193.2.205.27:5000")
-        mlflow.set_experiment("mnist")
-        mlflow.autolog()
+        ## Uncomment for mlflow logging, make sure mlflow server is running on this ip
+        # import mlflow
+        # import mlflow.keras
+        # mlflow.set_tracking_uri("http://193.2.205.27:5000")
+        # mlflow.set_experiment("mnist")
+        # mlflow.autolog()
 
         num_classes = 10
         input_shape = (28, 28, 1)
@@ -40,24 +36,14 @@ def train(x_train: np.ndarray, y_train: np.ndarray) -> keras.Sequential:
 
         model.summary()
 
-        """
-        ## Train the model
-        """
-
         batch_size = 128
-        epochs = 5
-
+        epochs = 2
         model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 
         model.fit(x, y, batch_size=batch_size, epochs=epochs, validation_split=0.1)
-
-        # mlflow.keras.log_model(model, "model")
-        # get model uri
-        # model_uri = mlflow.get_artifact_uri("model")
         return model
 
     ray.init(address="ray://193.2.205.27:10001", ignore_reinit_error=True)
     model_uri = remo_train.remote(x_train, y_train)
     model_uri = ray.get(model_uri)
-    # mlflow.keras.log_model(model_uri, "mnist")
     return model_uri

@@ -1,9 +1,9 @@
-from zenml import pipeline
+from zenml import pipeline, ExternalArtifact
 from zenml.config import DockerSettings
-from steps import train, deploy, eval, fetch_data
+from steps import train, deploy, eval, fetch_data, retrain
 from zenml.integrations.kubernetes.flavors.kubernetes_orchestrator_flavor import KubernetesOrchestratorSettings
-from zenml.client import Client
 import os
+import argparse
 
 kubernetes_settings = KubernetesOrchestratorSettings(
     pod_settings={
@@ -27,7 +27,6 @@ kubernetes_settings = KubernetesOrchestratorSettings(
     }
 )
 
-
 script_dir = os.path.dirname(os.path.abspath(__file__))
 requirements_path = os.path.join(script_dir, 'requirements.txt')
 docker_settings = DockerSettings(requirements=requirements_path)
@@ -44,18 +43,19 @@ def fashion():
     deploy(model_uri)
 
 
-if __name__ == "__main__":
-    """
-    # For scheduled runs use Cron:
-    # cron_expression = "*/30 * * * *" # for repeated run
-    cron_expression = "37 * * * *"
-    schedule = Schedule(cron_expression=cron_expression)
-    ray_pipe = ray_pipe.with_options(schedule=schedule)
-    """
-    try:
-        Client().delete_pipeline("fashion")
-    except KeyError as e:
-        print("Can't delete pipeline that doesn't exist, proceeding...")
+@pipeline(enable_cache=False, settings={"docker": docker_settings, "orchestrator.kubernetes": kubernetes_settings})
+def fashion_retrain():
+    deploy.after(eval)  # so evaluation is first in the pipeline
+    eval.after(retrain)
+    data = fetch_data()
+    model_uri = retrain(train_images=data[0], train_lables=data[1], model=ExternalArtifact(name="Fashion model"))
+    eval(model_uri=model_uri, test_images=data[2], test_lables=data[3])
+    deploy(model_uri)
 
-    os.system("zenml artifact prune -y")
-    fashion()
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Choose the pipeline to run")
+    parser.add_argument('--retrain', action='store_true')
+    args = parser.parse_args()
+
+    fashion_retrain() if args.retrain else fashion()

@@ -1,19 +1,15 @@
-import keras
 from zenml import step
+import keras
+import ray
+from ray import serve
+from fastapi import FastAPI, File, UploadFile
+import numpy as np
+import io
+from PIL import Image
 
 
 @step()
 def deploy(model: keras.Sequential) -> None:
-    import keras
-    import ray
-    from ray import serve
-    from fastapi import FastAPI, File, UploadFile
-    import numpy as np
-    import io
-    from PIL import Image
-    from typing import List
-    from zenml.client import Client
-    
     app = FastAPI(debug=True)
 
     @serve.deployment(name="mnist", num_replicas=1, ray_actor_options={"num_cpus": 0.2, "num_gpus": 0})
@@ -21,7 +17,7 @@ def deploy(model: keras.Sequential) -> None:
     class Hello:
         def __init__(self):
             self.model: keras.Sequential = model
-            
+
         @app.post("/")
         async def classify_image(self, file: UploadFile = File(...)):
             # Read the image file
@@ -48,15 +44,11 @@ def deploy(model: keras.Sequential) -> None:
 
             # Return the prediction
             return {"class_index": prediction}
-        
+
         @app.post("/test")
         def get(self):
             return "Welcome to the PyTorch model server."
-        
 
     ray.init(address="ray://193.2.205.27:10001", ignore_reinit_error=True)
     serve.run(Hello.bind(), name="mnist", route_prefix="/mnist")
-    serve.delete("text_ml_app") # placeholder removal
-
-
-# curl -X POST "http://193.2.205.27/ray-api/" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "file=@my.png"
+    serve.delete("text_ml_app")  # placeholder removal

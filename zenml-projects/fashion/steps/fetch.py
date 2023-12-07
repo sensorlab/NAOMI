@@ -1,4 +1,3 @@
-import logging
 from zenml import step
 import numpy as np
 import tensorflow as tf

@@ -1,9 +1,9 @@
-from zenml import pipeline
+from zenml import pipeline, ExternalArtifact
 from zenml.config import DockerSettings
-from steps import train, deploy, eval, fetch_data, test_deploy
+from steps import train, deploy, eval, fetch_data, test_deploy, retrain
 from zenml.integrations.kubernetes.flavors.kubernetes_orchestrator_flavor import KubernetesOrchestratorSettings
-from zenml.client import Client
 import os
+import argparse
 
 kubernetes_settings = KubernetesOrchestratorSettings(
     pod_settings={
@@ -33,7 +33,7 @@ docker_settings = DockerSettings(requirements=requirements_path)
 # docker_settings = DockerSettings(parent_image="localhost:32000/zenml:ray_pipe-orchestrator")
 
 @pipeline(enable_cache=False, settings={"docker": docker_settings, "orchestrator.kubernetes": kubernetes_settings})
-def ray_pipe():
+def mnist_train():
     deploy.after(eval)  # so evaluation is first in the pipeline
     test_deploy.after(deploy)
     eval.after(train)
@@ -45,6 +45,19 @@ def ray_pipe():
     test_deploy()
 
 
+@pipeline(enable_cache=False, settings={"docker": docker_settings, "orchestrator.kubernetes": kubernetes_settings})
+def mnist_retraining():
+    deploy.after(eval)
+    test_deploy.after(deploy)
+    eval.after(retrain)
+
+    data = fetch_data()
+    model = retrain(x_train=data[0], y_train=data[1], model=ExternalArtifact(name="mnist_model"))
+    eval(model_uri=model, x_test=data[2], y_test=data[3])
+    deploy(model)
+    test_deploy()
+
+
 if __name__ == "__main__":
     """
     # For scheduled runs use Cron:
@@ -53,11 +66,11 @@ if __name__ == "__main__":
     schedule = Schedule(cron_expression=cron_expression)
     ray_pipe = ray_pipe.with_options(schedule=schedule)
     """
-    # Cleanup
-    try:
-        Client().delete_pipeline("ray_pipe")
-    except KeyError as e:
-        print("Can't delete pipeline that doesn't exist, proceeding...")
+    parser = argparse.ArgumentParser(description="Choose the pipeline to run")
+    parser.add_argument('--retrain', action='store_true')
+    args = parser.parse_args()
 
-    os.system("zenml artifact prune -y")
-    ray_pipe()
+    if args.retrain:
+        mnist_retraining()
+    else:
+        mnist_train()
