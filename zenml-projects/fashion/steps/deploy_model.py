@@ -43,6 +43,6 @@ def deploy(model: tf.keras.Sequential) -> None:
             # Return the prediction
             return {"class_index": prediction}
 
-    ray.init(address="ray://193.2.205.27:10001", ignore_reinit_error=True)
+    ray.init(address="ray://193.2.205.27:30001", ignore_reinit_error=True)
     serve.run(Fashion.bind(), name="Fashion", route_prefix="/fashion")
     serve.delete("text_ml_app")  # placeholder removal

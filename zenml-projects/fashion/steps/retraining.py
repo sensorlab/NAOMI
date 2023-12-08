@@ -15,7 +15,7 @@ def retrain(train_images: np.ndarray, train_lables: np.ndarray, model: tf.keras.
         mnist_model.fit(x, y, batch_size=batch_size, epochs=epochs, validation_split=0.1)
         return mnist_model
 
-    ray.init(address="ray://193.2.205.27:10001", ignore_reinit_error=True)
+    ray.init(address="ray://193.2.205.27:30001", ignore_reinit_error=True)
     model.summary()
     model = fashion_retrain.remote(train_images, train_lables, model)
     model = ray.get(model)

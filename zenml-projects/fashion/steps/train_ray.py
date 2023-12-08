@@ -21,7 +21,7 @@ def train(train_images: np.ndarray, train_lables: np.ndarray) -> Annotated[tf.ke
         model.fit(train_images, train_lables, epochs=5)
         return model
 
-    ray.init(address="ray://193.2.205.27:10001", ignore_reinit_error=True)
+    ray.init(address="ray://193.2.205.27:30001", ignore_reinit_error=True)
     model = remo_train.remote(train_images, train_lables)
     model = ray.get(model)
 

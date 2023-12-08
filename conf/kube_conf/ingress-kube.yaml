@@ -30,3 +30,20 @@ spec:
               number: 8000
         path: /ray-api/(.*)
         pathType: Exact
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ray-serve-head-svc-nodeport
+  namespace: ray-system
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/created-by: kuberay-operator
+    app.kubernetes.io/name: kuberay
+    ray.io/node-type: head
+  ports:
+    - protocol: TCP
+      port: 10001
+      targetPort: 10001
+      nodePort: 30001 # replace with the desired NodePort

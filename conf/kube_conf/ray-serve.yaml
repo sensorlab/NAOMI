@@ -101,9 +101,10 @@ spec:
     # The pod replicas in this group typed worker
     - replicas: 1
       minReplicas: 1
-      maxReplicas: 1
+      maxReplicas: 2
       groupName: amd-group
-      rayStartParams: {}
+      rayStartParams:
+        num-cpus: "4"
       # Pod template
       template:
         spec:
@@ -123,7 +124,8 @@ spec:
       minReplicas: 0
       maxReplicas: 1
       groupName: aarch-group
-      rayStartParams: {}
+      rayStartParams:
+        num-cpus: "4"
       # Pod template
       template:
         spec:

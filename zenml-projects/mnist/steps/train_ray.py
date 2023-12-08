@@ -43,7 +43,7 @@ def train(x_train: np.ndarray, y_train: np.ndarray) \
         model.fit(x, y, batch_size=batch_size, epochs=epochs, validation_split=0.1)
         return model
 
-    ray.init(address="ray://193.2.205.27:10001", ignore_reinit_error=True)
+    ray.init(address="ray://193.2.205.27:30001", ignore_reinit_error=True)
     model_uri = remo_train.remote(x_train, y_train)
     model_uri = ray.get(model_uri)
     return model_uri

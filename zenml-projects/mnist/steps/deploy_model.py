@@ -49,6 +49,6 @@ def deploy(model: keras.Sequential) -> None:
         def get(self):
             return "Welcome to the PyTorch model server."
 
-    ray.init(address="ray://193.2.205.27:10001", ignore_reinit_error=True)
+    ray.init(address="ray://193.2.205.27:30001", ignore_reinit_error=True)
     serve.run(Hello.bind(), name="mnist", route_prefix="/mnist")
     serve.delete("text_ml_app")  # placeholder removal

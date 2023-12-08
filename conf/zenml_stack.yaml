@@ -1,0 +1,26 @@
+components:
+  artifact_store:
+    configuration:
+      client_kwargs:
+        endpoint_url: http://193.2.205.27:30084
+      key: minio
+      path: s3://zen
+      secret: miniostorage
+    flavor: s3
+    name: working_minio
+    type: artifact_store
+  container_registry:
+    configuration:
+      uri: localhost:32000
+    flavor: default
+    name: reg
+    type: container_registry
+  orchestrator:
+    configuration:
+      kubernetes_context: microk8s
+      skip_local_validations: 'True'
+    flavor: kubernetes
+    name: kube-zen
+    type: orchestrator
+stack_name: kube_stack
+zenml_version: 0.50.0
