@@ -134,9 +134,9 @@ spec:
             image: copandrej/ijs-custom:ray-aarch64-ray26-ml-1
             resources:
               limits:
-                cpu: "3.75"
+                cpu: "3.5"
                 memory: "5G"
               requests:
-                cpu: "3.75"
+                cpu: "3.5"
                 memory: "5G"
           nodeName: raspberrypi
