@@ -1,3 +1,5 @@
 mlruns/
 *.png
 mlartifacts/
+__pycache__
+.zen/

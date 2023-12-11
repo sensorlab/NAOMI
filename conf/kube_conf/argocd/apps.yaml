@@ -59,9 +59,8 @@ spec:
       targetRevision: 0.50.0
       helm:
         valueFiles:
-          - $values/values.yaml
+          - $values/conf/kube_conf/zenml/values.yaml
     - repoURL: 'https://github.com/copandrej/IJS-AI_orchestration.git'
-      path: conf/kube_conf/zenml
       ref: values
   destination:
     server: https://kubernetes.default.svc
