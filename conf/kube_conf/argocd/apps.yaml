@@ -1,0 +1,71 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kuberay-operator
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ray-project/kuberay
+    targetRevision: v1.0.0-rc.0
+    path: helm-chart/kuberay-operator/crds
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ray-system
+  syncPolicy:
+    syncOptions:
+    - Replace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kuberay-operator
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ray-project/kuberay
+    targetRevision: v1.0.0-rc.0
+    path: helm-chart/kuberay-operator
+    helm:
+      skipCrds: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ray-system
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ai-orch
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/copandrej/IJS-AI_orchestration.git'
+    path: conf/kube_conf
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: ray-system
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: zenml-server
+spec:
+  project: default
+  sources:
+    - repoURL: public.ecr.aws/zenml
+      chart: zenml
+      targetRevision: 0.50.0
+      helm:
+        valueFiles:
+          - $values/values.yaml
+    - repoURL: 'https://github.com/copandrej/IJS-AI_orchestration.git'
+      path: conf/kube_conf/zenml
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: zen-system
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
