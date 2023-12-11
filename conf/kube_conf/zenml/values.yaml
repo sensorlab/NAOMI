@@ -1,4 +1,5 @@
 # ZenML server related options.
+# do to some bugs we might one to set pod image to be zenmldocker/zenml-server:0.50.0, which is default, but can be overwritten by values
 zenml:
   debug: true
   analyticsOptIn: false

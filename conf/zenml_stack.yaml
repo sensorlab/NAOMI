@@ -2,7 +2,7 @@ components:
   artifact_store:
     configuration:
       client_kwargs:
-        endpoint_url: http://193.2.205.27:30084
+        endpoint_url: http://193.2.205.27:30085
       key: minio
       path: s3://zen
       secret: miniostorage
