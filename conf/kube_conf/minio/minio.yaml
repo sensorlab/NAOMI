@@ -9,7 +9,7 @@ metadata:
   name: minio-pvc
   namespace: minio
 spec:
-  storageClassName: local-persistent
+  storageClassName: microk8s-hostpath
   accessModes:
     - ReadWriteOnce
   resources:
