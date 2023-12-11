@@ -1,0 +1,5 @@
+# temporary, it just creates namespace for zenml orchestrator to work TODO move to zenml dir for argocd conf
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zenml
