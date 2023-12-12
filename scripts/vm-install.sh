@@ -16,10 +16,6 @@ sudo chown -f -R $USER ~/.kube
 newgrp microk8s
 
 export PATH=$PATH:/snap/bin
-if ! grep -q "PATH=$PATH:/snap/bin" ~/.bashrc; then
-  echo "PATH=$PATH:/snap/bin" >> ~/.bashrc
-fi
-source ~/.bashrc
 sleep 10
 
 # Enable addons
@@ -31,7 +27,7 @@ microk8s enable dashboard
 microk8s status --wait-ready
 
 # Alias microk8s kubectl to kubectl
-alias kubectl='microk8s kubectl'
+sudo snap alias microk8s.kubectl kubectl
 sleep 20
 
 # Install ArgoCD on kubernetes + apply our system's source of truth
@@ -63,3 +59,5 @@ read -s NEW_PASSWORD
 argocd account update-password --current-password $INITIAL_PASSWORD --new-password $NEW_PASSWORD
 
 echo "Go to VM_IP:$(echo $ARGOCD_PORT) for ArgoCD console!"
+
+# TODO before apps will deploy correctly repo needs to be public or github keys need to be setup
