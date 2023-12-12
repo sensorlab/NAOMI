@@ -18,7 +18,7 @@ export PATH=$PATH:/snap/bin
 if ! grep -q "PATH=$PATH:/snap/bin" ~/.bashrc; then
   echo "PATH=$PATH:/snap/bin" >> ~/.bashrc
 fi
-# source ~/.bashrc
+source ~/.bashrc
 
 # add/repair dns
 sudo apt-get install systemd-resolved -y &&
@@ -28,4 +28,5 @@ sleep 20 # allow things to settle
 echo "Install script finished"
 echo "Add a hostname of this node: " $(hostname) " and IPv4: " $(hostname -I)" to /etc/hosts on head node!"
 echo "Then run:< microk8s.add-node > on head node, and connect this node to cluster"
-microk8s version || echo "Please reboot rpi first" && exit 1
+microk8s version || echo "Please reboot rpi first and afterwards run: microk8s enable dns" && exit 1
+microk8s enable dns
