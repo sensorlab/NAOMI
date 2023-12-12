@@ -43,6 +43,8 @@ curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/lat
 sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
 rm argocd-linux-amd64
 
+microk8s config > $HOME/.kube/config
+
 # Retrieve the initial password
 echo "Retrieving the initial password for the 'admin' account..."
 INITIAL_PASSWORD=$(kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d)
