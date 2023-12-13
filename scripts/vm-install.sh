@@ -28,7 +28,9 @@ microk8s status --wait-ready
 
 # Alias microk8s kubectl to kubectl
 sudo snap alias microk8s.kubectl kubectl
-sleep 20
+echo "Waiting for system pods.."
+kubectl wait --for=condition=ready pod -n kube-system --all
+echo "Done"
 
 # Install ArgoCD on kubernetes + apply our system's source of truth
 kubectl create namespace argocd
@@ -44,6 +46,10 @@ sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
 rm argocd-linux-amd64
 
 microk8s config > $HOME/.kube/config
+
+echo "Waiting for argocd pods to start.."
+kubectl wait --for=condition=ready pod -n argocd --all
+echo "Done"
 
 # Retrieve the initial password
 echo "Retrieving the initial password for the 'admin' account..."
@@ -62,3 +68,6 @@ argocd account update-password --current-password $INITIAL_PASSWORD --new-passwo
 
 echo "Go to VM_IP:$(echo $ARGOCD_PORT) for ArgoCD console!"
 
+echo "Waiting for zenml pods to start.."
+kubectl wait --for=condition=ready pod -n zen-system --all
+echo "Done"
