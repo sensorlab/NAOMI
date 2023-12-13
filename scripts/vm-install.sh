@@ -1,8 +1,8 @@
 #!/bin/bash
 # Install sript for kubernetes on on-premise VM. NOT TESTED!
 
-set -e
-trap 'echo "Install script for VM was not successful!"; exit 1' ERR
+#set -e
+#trap 'echo "Install script for VM was not successful!"; exit 1' ERR
 
 VM_IP=localhost
 
@@ -62,4 +62,3 @@ argocd account update-password --current-password $INITIAL_PASSWORD --new-passwo
 
 echo "Go to VM_IP:$(echo $ARGOCD_PORT) for ArgoCD console!"
 
-# TODO before apps will deploy correctly repo needs to be public or github keys need to be setup

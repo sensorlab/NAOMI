@@ -1,8 +1,9 @@
+#this file needs to be parsed or <IP> needs to be changed before it is usable
 components:
   artifact_store:
     configuration:
       client_kwargs:
-        endpoint_url: http://193.2.205.27:30085
+        endpoint_url: http://<IP>:30085
       key: minio
       path: s3://zen
       secret: miniostorage
