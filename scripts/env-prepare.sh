@@ -23,7 +23,7 @@ source /$HOME/miniconda3/bin/activate ray
 
 # install pip and requirements
 conda install -y pip
-pip install -r ../requirements.txt
+pip install -r requirements.txt  || { echo "requirements file not found. Did you run the script from the root of the repository?"; exit 1 }
 
 # Ask the user if Kubernetes is running on the same machine
 read -p "Is Kubernetes cluster with zenml running on this machine (y/n)? " answer

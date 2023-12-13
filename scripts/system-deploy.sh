@@ -1,22 +1,10 @@
 #!/bin/bash
 # Install sript for kubernetes on on-premise VM. NOT TESTED!
 
-#set -e
-#trap 'echo "Install script for VM was not successful!"; exit 1' ERR
+set -e
+trap 'echo "System deployment script failed"; exit 1' ERR
 
 VM_IP=localhost
-
-# Install microk8s
-sudo apt update && sudo apt upgrade -y && sudo apt install snapd -y
-sudo snap install microk8s --classic --channel=1.27/stable
-sleep 10
-
-sudo usermod -a -G microk8s $USER
-sudo chown -f -R $USER ~/.kube
-newgrp microk8s
-
-export PATH=$PATH:/snap/bin
-sleep 10
 
 # Enable addons
 microk8s status --wait-ready
@@ -37,7 +25,7 @@ kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
 kubectl config set-context --current --namespace=argocd
-kubectl apply -f ../conf/kube_conf/argocd/apps.yaml
+kubectl apply -f conf/kube_conf/argocd/apps.yaml || { echo "Config file not found. Did you run the script from the root of the repository?"; exit 1 }
 
 # Download and install the ArgoCD CLI
 echo "Downloading and installing ArgoCD CLI..."
