@@ -23,7 +23,7 @@ source /$HOME/miniconda3/bin/activate ray
 
 # install pip and requirements
 conda install -y pip
-pip install -r requirements.txt  || { echo "requirements file not found. Did you run the script from the root of the repository?"; exit 1 }
+pip install -r requirements.txt  || { echo "requirements file not found. Did you run the script from the root of the repository?"; exit 1; }
 
 # Ask the user if Kubernetes is running on the same machine
 read -p "Is Kubernetes cluster with zenml running on this machine (y/n)? " answer
@@ -48,3 +48,8 @@ zenml stack import temp.yaml
 zenml stack set kube_stack
 
 rm temp.yaml # cleanup
+export PATH=$PATH:$HOME/miniconda3/bin
+echo "Run to start using env:"
+echo "conda init bash"
+echo "source ~./bashrc"
+echo "conda activate ray"

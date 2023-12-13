@@ -17,7 +17,7 @@ microk8s status --wait-ready
 # Alias microk8s kubectl to kubectl
 sudo snap alias microk8s.kubectl kubectl
 echo "Waiting for system pods.."
-kubectl wait --for=condition=ready pod -n kube-system --all
+kubectl wait --for=condition=ready pod -n kube-system --all --timeout=180s
 echo "Done"
 
 # Install ArgoCD on kubernetes + apply our system's source of truth
@@ -25,7 +25,7 @@ kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
 kubectl config set-context --current --namespace=argocd
-kubectl apply -f conf/kube_conf/argocd/apps.yaml || { echo "Config file not found. Did you run the script from the root of the repository?"; exit 1 }
+kubectl apply -f conf/kube_conf/argocd/apps.yaml || { echo "Config file not found. Did you run the script from the root of the repository?"; exit 1; }
 
 # Download and install the ArgoCD CLI
 echo "Downloading and installing ArgoCD CLI..."
@@ -36,7 +36,7 @@ rm argocd-linux-amd64
 microk8s config > $HOME/.kube/config
 
 echo "Waiting for argocd pods to start.."
-kubectl wait --for=condition=ready pod -n argocd --all
+kubectl wait --for=condition=ready pod -n argocd --all --timeout=180s
 echo "Done"
 
 # Retrieve the initial password
@@ -56,6 +56,10 @@ argocd account update-password --current-password $INITIAL_PASSWORD --new-passwo
 
 echo "Go to VM_IP:$(echo $ARGOCD_PORT) for ArgoCD console!"
 
+# TODO Note that this is hardcoded, some automatic syncing is needed!
+echo "Syncing apps:"
+argocd app sync zenml-server minio kuberay-operator-crds kuberay-operator ray
+
 echo "Waiting for zenml pods to start.."
-kubectl wait --for=condition=ready pod -n zen-system --all
+kubectl wait --for=condition=ready pod -n zen-system --all --timeout=180s
 echo "Done"

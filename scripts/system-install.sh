@@ -6,7 +6,7 @@ sudo apt update && sudo apt upgrade -y && sudo apt install snapd -y
 sudo snap install microk8s --classic --channel=1.27/stable
 sudo usermod -a -G microk8s $USER
 sudo chown -f -R $USER ~/.kube
-newgrp microk8s
 
 # Running system-deploy.sh with new group for microk8s to work
 sg microk8s -c "bash ./scripts/system-deploy.sh"
+newgrp microk8s
