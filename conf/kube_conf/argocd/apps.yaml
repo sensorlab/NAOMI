@@ -85,6 +85,44 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  name: flyte-system
+spec:
+  project: default
+  sources:
+    - repoURL: flyteorg.github.io/flyte
+      chart: flyte-binary
+      targetRevision: 1.10.6
+      helm:
+        valueFiles:
+          - $values/conf/kube_conf/flyte/values/local-values.yaml
+    - repoURL: 'https://github.com/copandrej/IJS-AI_orchestration.git'
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: flyte
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: flyte-resources
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/copandrej/IJS-AI_orchestration.git'
+    path: conf/kube_conf/flyte
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: flyte
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
   name: minio
 spec:
   project: default
