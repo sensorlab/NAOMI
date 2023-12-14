@@ -45,7 +45,7 @@ spec:
           - name: MINIO_ROOT_PASSWORD
             value: miniostorage
           - name: MINIO_DEFAULT_BUCKETS
-            value: zen
+            value: "zen, my-s3-bucket"
         ports:
         - containerPort: 9000
           name: minio
