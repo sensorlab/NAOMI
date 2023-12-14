@@ -85,11 +85,11 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: flyte-system
+  name: flyte-binary
 spec:
   project: default
   sources:
-    - repoURL: flyteorg.github.io/flyte
+    - repoURL: 'https://flyteorg.github.io/flyte'
       chart: flyte-binary
       targetRevision: 1.10.6
       helm:

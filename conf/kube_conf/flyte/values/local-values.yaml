@@ -41,6 +41,14 @@ configuration:
 serviceAccount:
   create: true
 
+# deployment Configure Flyte deployment specification
+deployment:
+  # extraPodSpec Specify additional configuration for Flyte pod
+  # This can be used for adding affinity, tolerations, hostNetwork, etc.
+  extraPodSpec:
+    nodeSelector:
+      kubernetes.io/arch: "amd64"
+
 # Uncomment for ray integration - doesnt work right now
 #  inline:
 #   tasks:
