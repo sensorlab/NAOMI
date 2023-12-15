@@ -38,11 +38,11 @@ def train(x_train: np.ndarray, y_train: np.ndarray) \
         import keras
         from keras import layers
         ## Uncomment for mlflow logging, make sure mlflow server is running on this ip
-        # import mlflow
-        # import mlflow.keras
-        # mlflow.set_tracking_uri("http://193.2.205.27:5000")
+        import mlflow
+        import mlflow.keras
+        mlflow.set_tracking_uri("http://193.2.205.27:5000")
         # mlflow.set_experiment("mnist")
-        # mlflow.autolog()
+        mlflow.autolog()
 
         num_classes = 10
         input_shape = (28, 28, 1)
@@ -67,6 +67,7 @@ def train(x_train: np.ndarray, y_train: np.ndarray) \
         model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 
         model.fit(x, y, batch_size=batch_size, epochs=epochs, validation_split=0.1)
+        mlflow.keras.log_model(model, artifact_path="models", registered_model_name="mnist_model")
         return model
 
     ray.init(address="ray://193.2.205.27:30001", ignore_reinit_error=True)

@@ -16,10 +16,10 @@ from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
                 name="primary",
                 resources=V1ResourceRequirements(
                     limits={
-                        "memory": "1Gi"
+                        "memory": "2Gi"
                     },
                     requests={
-                        "memory": "1Gi"
+                        "memory": "2Gi"
                     }
                 ),
             ),
@@ -27,17 +27,26 @@ from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
     )
 )
 )
-def retrain(x_train: np.ndarray, y_train: np.ndarray, model: keras.Sequential) \
+def retrain(x_train: np.ndarray, y_train: np.ndarray) \
         -> keras.Sequential:
 
     @ray.remote(num_cpus=2)
-    def mnist_retraining(x: np.ndarray, y: np.ndarray, mnist_model: keras.Sequential):
-        # Re-train the model
+    def mnist_retraining(x: np.ndarray, y: np.ndarray):
+        import mlflow.keras
+        import keras
+        mlflow.set_tracking_uri("http://193.2.205.27:5000")
+
+        # Load the latest version of the model from MLFlow
+        model_uri = "models:/mnist_model/latest"
+        mnist_model: keras.Sequential = mlflow.keras.load_model(model_uri)
+
+        # Re-train the model and store it back to mlflow
         mnist_model.fit(x, y, batch_size=128, epochs=1, validation_split=0.1)
+        mlflow.keras.log_model(mnist_model, artifact_path="models", registered_model_name="mnist_model")
+
         return mnist_model
 
     ray.init(address="ray://193.2.205.27:30001", ignore_reinit_error=True)
-    model.summary()
-    model = mnist_retraining.remote(x_train, y_train, model)
+    model = mnist_retraining.remote(x_train, y_train)
     model = ray.get(model)
     return model

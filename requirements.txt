@@ -14,7 +14,6 @@ tqdm
 flytekit
 pandas
 scikit-learn
-zenml
 pyyaml
 numpy
 argparse
