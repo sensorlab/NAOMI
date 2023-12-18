@@ -32,6 +32,7 @@ def retrain(x_train: np.ndarray, y_train: np.ndarray) \
 
     @ray.remote(num_cpus=2)
     def mnist_retraining(x: np.ndarray, y: np.ndarray):
+        import mlflow
         import mlflow.keras
         import keras
         mlflow.set_tracking_uri("http://193.2.205.27:5000")
