@@ -5,6 +5,8 @@ import numpy as np
 from flytekit import task, PodTemplate
 from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
 
+# TODO :check if using requests as task argument overrides resource limits in podtemplate
+
 
 @task(pod_template=PodTemplate(
     pod_spec=V1PodSpec(
@@ -16,10 +18,11 @@ from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
                 name="primary",
                 resources=V1ResourceRequirements(
                     limits={
-                        "memory": "2Gi"
+                        "memory": "2Gi",
+                        "cpu": "1000m"
                     },
                     requests={
-                        "memory": "2Gi"
+                        "memory": "1Gi"
                     }
                 ),
             ),
@@ -29,7 +32,7 @@ from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
 )
 def train(x_train: np.ndarray, y_train: np.ndarray) \
         -> keras.Sequential:
-    @ray.remote(num_cpus=4)
+    @ray.remote(num_cpus=2)
     def remo_train(x, y):
         import keras
         import ray

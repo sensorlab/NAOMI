@@ -23,6 +23,16 @@ kubernetes_settings = KubernetesOrchestratorSettings(
                     ]
                 }
             }
+        },
+        "resources": {
+            "limits": {
+                "cpu": "1000m",
+                "memory": "2Gi"
+            },
+            "requests": {
+                "memory": "1Gi",
+                "cpu": "1000m"
+            }
         }
     }
 )
@@ -34,7 +44,7 @@ docker_settings = DockerSettings(requirements=requirements_path)
 
 @pipeline(enable_cache=False, settings={"docker": docker_settings, "orchestrator.kubernetes": kubernetes_settings})
 def mnist_train():
-    deploy.after(eval)  # so evaluation is first in the pipeline
+    # deploy.after(eval)  # so evaluation is first in the pipeline
     test_deploy.after(deploy)
     eval.after(train)
 
@@ -47,7 +57,7 @@ def mnist_train():
 
 @pipeline(enable_cache=False, settings={"docker": docker_settings, "orchestrator.kubernetes": kubernetes_settings})
 def mnist_retraining():
-    deploy.after(eval)
+    # deploy.after(eval)
     test_deploy.after(deploy)
     eval.after(retrain)
 

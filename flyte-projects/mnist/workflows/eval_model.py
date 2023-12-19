@@ -17,7 +17,8 @@ from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
                 name="primary",
                 resources=V1ResourceRequirements(
                     limits={
-                        "memory": "1Gi"
+                        "memory": "2Gi",
+                        "cpu": "1000m"
                     },
                     requests={
                         "memory": "1Gi"

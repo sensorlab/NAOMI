@@ -29,8 +29,8 @@ configuration:
           - FLYTE_AWS_SECRET_ACCESS_KEY: "miniostorage" #Use the same value as the MINIO_ROOT_PASSWORD
     task_resources:
       defaults: 
-        cpu: 100m
-        memory: 500Mi #change default requested resources and limits to fit your needs
+        cpu: 1000m
+        memory: 1Gi #change default requested resources and limits to fit your needs
       limits:
         memory: 2Gi
     storage:
