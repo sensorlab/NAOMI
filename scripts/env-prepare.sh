@@ -27,7 +27,7 @@ pip install -r requirements.txt  || { echo "requirements file not found. Did you
 curl -sL https://ctl.flyte.org/install | sudo bash -s -- -b /usr/local/bin
 
 # Ask the user if Kubernetes is running on the same machine
-read -p "Is Kubernetes cluster with zenml running on this machine (y/n)? " answer
+read -p "Is Kubernetes cluster with zenml/flyte running on this machine (y/n)? " answer
 
 case ${answer:0:1} in
     y|Y )
@@ -47,6 +47,9 @@ cp conf/zenml_stack.yaml temp.yaml
 sed -i "s/<IP>/$IP/g" temp.yaml
 zenml stack import temp.yaml
 zenml stack set kube_stack
+
+#connect flyte
+flytectl config init --host=$IP:31081 --storage=s3 --console=$IP:31082 --insecure
 
 rm temp.yaml # cleanup
 export PATH=$PATH:$HOME/miniconda3/bin

@@ -46,6 +46,8 @@ spec:
       labels: 
         app.kubernetes.io/name: postgres
     spec:
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
       containers:
       - image: "ecr.flyte.org/ubuntu/postgres:13-21.04_beta"
         imagePullPolicy: "IfNotPresent"

@@ -11,14 +11,12 @@ sudo snap install microk8s --classic --channel=1.27/stable &&
 sleep 10
 sudo usermod -a -G microk8s $USER &&
 sudo chown -f -R $USER ~/.kube &&
-newgrp microk8s &&
 
 # need to test if adding to path is needed maybe just reboot or restart/source shell
 export PATH=$PATH:/snap/bin
 if ! grep -q "PATH=$PATH:/snap/bin" ~/.bashrc; then
   echo "PATH=$PATH:/snap/bin" >> ~/.bashrc
 fi
-source ~/.bashrc
 
 # add/repair dns
 sudo apt-get install systemd-resolved -y &&
@@ -28,5 +26,4 @@ sleep 20 # allow things to settle
 echo "Install script finished"
 echo "Add a hostname of this node: " $(hostname) " and IPv4: " $(hostname -I)" to /etc/hosts on head node!"
 echo "Then run:< microk8s.add-node > on head node, and connect this node to cluster"
-microk8s version || echo "Please reboot rpi first and afterwards run: microk8s enable dns" && exit 1
-microk8s enable dns
+newgrp microk8s
