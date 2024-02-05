@@ -26,7 +26,7 @@ spec:
             ray_actor_options:
               num_cpus: 0.2
   rayClusterConfig:
-    rayVersion: '2.6.3' # Should match the Ray version in the image of the containers
+    rayVersion: '2.9.1' # Should match the Ray version in the image of the containers
     #############auto scaler copied from https://github.com/ray-project/kuberay/blob/5b1a5a11f5df76db2d66ed332ff0802dc3bbff76/ray-operator/config/samples/ray-cluster.autoscaler.yaml ############################
     enableInTreeAutoscaling: true
     # `autoscalerOptions` is an OPTIONAL field specifying configuration overrides for the Ray Autoscaler.
@@ -73,7 +73,7 @@ spec:
         spec:
           containers:
           - name: ray-head
-            image: copandrej/ijs-custom:ray-amd64-ray26-ml-1
+            image: copandrej/ijs-custom:ray-amd64-ray29
             ports:
             - containerPort: 6379
               name: gcs
@@ -102,7 +102,7 @@ spec:
     # The pod replicas in this group typed worker
     - replicas: 1
       minReplicas: 1
-      maxReplicas: 2
+      maxReplicas: 1
       groupName: amd-group
       rayStartParams:
         num-cpus: "4"
@@ -111,7 +111,7 @@ spec:
         spec:
           containers:
           - name: ray-worker
-            image: copandrej/ijs-custom:ray-amd64-ray26-ml-1
+            image: copandrej/ijs-custom:ray-amd64-ray29
             resources:
               limits:
                 cpu: 4
@@ -122,9 +122,9 @@ spec:
           nodeSelector:
             kubernetes.io/arch: "amd64"
     # maxReplicas should equal to the number of raspberry pi 5 nodes
-    - replicas: 0
-      minReplicas: 0
-      maxReplicas: 1
+    - replicas: 3
+      minReplicas: 3
+      maxReplicas: 3
       groupName: aarch-group
       rayStartParams:
         num-cpus: "4"
@@ -133,13 +133,13 @@ spec:
         spec:
           containers:
           - name: ray-worker
-            image: copandrej/ijs-custom:ray-aarch64-ray26-ml-1
+            image: copandrej/ijs-custom:ray-aarch64-ray29
             resources:
               limits:
-                cpu: "3.5"
+                cpu: "3.75"
                 memory: "5G"
               requests:
-                cpu: "3.5"
+                cpu: "3.75"
                 memory: "5G"
           nodeSelector:
             kubernetes.io/arch: "arm64"
