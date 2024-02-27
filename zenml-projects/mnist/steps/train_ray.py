@@ -7,7 +7,7 @@ import numpy as np
 @step()
 def train(x_train: np.ndarray, y_train: np.ndarray) \
         -> Annotated[keras.Sequential, ArtifactConfig(name="mnist_model", is_model_artifact=True)]:
-    @ray.remote(num_cpus=2)
+    @ray.remote(num_cpus=4)
     def remo_train(x, y):
         import keras
         from keras import layers
@@ -37,13 +37,16 @@ def train(x_train: np.ndarray, y_train: np.ndarray) \
         model.summary()
 
         batch_size = 128
-        epochs = 2
+        epochs = 20
         model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 
         model.fit(x, y, batch_size=batch_size, epochs=epochs, validation_split=0.1)
         return model
 
     ray.init(address="ray://193.2.205.27:30001", ignore_reinit_error=True)
-    model_uri = remo_train.remote(x_train, y_train)
-    model_uri = ray.get(model_uri)
-    return model_uri
+
+    model_uris = [remo_train.remote(x_train, y_train) for _ in range(3)]
+    models = [ray.get(uri) for uri in model_uris]
+
+    model_out = models[0]
+    return model_out[0]

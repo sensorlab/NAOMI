@@ -106,6 +106,7 @@ spec:
       groupName: amd-group
       rayStartParams:
         num-cpus: "4"
+        resources: "'{\"vm\": 1}'"
       # Pod template
       template:
         spec:
@@ -128,6 +129,7 @@ spec:
       groupName: aarch-group
       rayStartParams:
         num-cpus: "4"
+        resources: "'{\"rasp\": 1}'"
       # Pod template
       template:
         spec:
