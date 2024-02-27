@@ -1,4 +1,4 @@
-# IJS AI orchestration
+# Self-Evolving AI/ML Workflow
 
 Our system is managed by ArgoCD, all changes to conf/kube_conf will be picked up by Argo and can be synced manually or automatically to our cluster.
 
