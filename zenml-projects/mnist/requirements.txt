@@ -4,7 +4,7 @@ keras
 mlflow
 pillow
 python-multipart
-ray[data,train,tune,serve] == 2.6.3
+ray[data,train,tune,serve] == 2.9.1
 requests
 starlette
 tensorflow
