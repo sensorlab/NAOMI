@@ -43,7 +43,7 @@ def test_deploy() -> None:
     # Log the response and check if the test passed
     response_json = response.json()
     logging.info(response_json)
-    assert response_json["class_index"] == [5], "Test failed!"
+    assert response_json["class_index"] == 5, "Test failed!"
 
     # Remove the image file
     os.remove('my.png')

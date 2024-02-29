@@ -1,11 +1,9 @@
-# TODO reduce number of packages to only necessary dependencies for project to work
 zenml == 0.50.0
-ray[data,train,tune,serve,rllib] == 2.9.1
+ray[train,tune,serve] == 2.9.1
 torch
 torchvision
 pillow
 requests
-starlette
 evaluate
 fastapi
 python-multipart

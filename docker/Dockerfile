@@ -3,7 +3,6 @@
 
 FROM rayproject/ray:2.9.1-py310
 
-RUN pip install torch torchvision pillow requests starlette evaluate transformers fastapi
-RUN pip install mlflow keras tensorflow
-RUN pip install fastapi python-multipart
-RUN pip install ray[rllib]
+# Install dependencies from requirements.txt
+COPY requirements.txt .
+RUN pip install -r requirements.txt

@@ -1,6 +1,4 @@
 import typing
-from flytekit import workflow
-from kubernetes.client import V1Container, V1ResourceRequirements
 
 from . import train, deploy, eval, fetch_data, test_deploy, retrain
 from flytekit import task, workflow, current_context

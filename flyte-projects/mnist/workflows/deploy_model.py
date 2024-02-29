@@ -3,10 +3,13 @@ import keras
 import ray
 from kubernetes.client import V1PodSpec, V1ResourceRequirements, V1Container
 from ray import serve
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, HTTPException
 import numpy as np
 import io
 from PIL import Image
+from typing import Annotated
+
+
 
 
 @task(pod_template=PodTemplate(
@@ -41,31 +44,31 @@ def deploy(model: keras.Sequential) -> None:
             self.model: keras.Sequential = model
 
         @app.post("/")
-        async def classify_image(self, file: UploadFile = File(...)):
-            # Read the image file
-            image_bytes = await file.read()
+        async def classify_image(self, file: Annotated[bytes, File()]):
+            try:
+                # Load the image with PIL
+                image = Image.open(io.BytesIO(file))
 
-            # Load the image with PIL
-            image = Image.open(io.BytesIO(image_bytes))
+                # Convert the image to grayscale and resize it to 28x28
+                image = image.convert('L').resize((28, 28))
 
-            # Convert the image to grayscale and resize it to 28x28
-            image = image.convert('L').resize((28, 28))
+                # Convert the image to a numpy array and scale it to the [0, 1] range
+                image_array = np.array(image).astype("float32") / 255
 
-            # Convert the image to a numpy array and scale it to the [0, 1] range
-            image_array = np.array(image).astype("float32") / 255
+                # Make sure the image has shape (28, 28, 1)
+                image_array = np.expand_dims(image_array, -1)
 
-            # Make sure the image has shape (28, 28, 1)
-            image_array = np.expand_dims(image_array, -1)
+                # Add an extra dimension for the batch size
+                image_array = np.expand_dims(image_array, 0)
 
-            # Add an extra dimension for the batch size
-            image_array = np.expand_dims(image_array, 0)
+                # Make a prediction
+                result = self.model.predict(image_array)
+                prediction = int(np.argmax(result, axis=1))
 
-            # Make a prediction
-            result = self.model.predict(image_array)
-            prediction = np.argmax(result, axis=1)
-
-            # Return the prediction
-            return {"class_index": prediction}
+                # Return the prediction
+                return {"class_index": prediction}
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=f"Error processing image: {str(e)}")
 
         @app.post("/test")
         def get(self):
