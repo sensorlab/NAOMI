@@ -3,3 +3,9 @@ mlruns/
 mlartifacts/
 __pycache__
 .zen/
+.idea
+.ipynb_checkpoints
+*.ipynb
+test.py
+time_comm.py
+*.csv

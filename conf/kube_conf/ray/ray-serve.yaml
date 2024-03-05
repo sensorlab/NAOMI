@@ -26,7 +26,7 @@ spec:
             ray_actor_options:
               num_cpus: 0.2
   rayClusterConfig:
-    rayVersion: '2.9.1' # Should match the Ray version in the image of the containers
+    rayVersion: '2.9.3' # Should match the Ray version in the image of the containers
     #############auto scaler copied from https://github.com/ray-project/kuberay/blob/5b1a5a11f5df76db2d66ed332ff0802dc3bbff76/ray-operator/config/samples/ray-cluster.autoscaler.yaml ############################
     enableInTreeAutoscaling: true
     # `autoscalerOptions` is an OPTIONAL field specifying configuration overrides for the Ray Autoscaler.
@@ -73,7 +73,7 @@ spec:
         spec:
           containers:
           - name: ray-head
-            image: copandrej/ijs-custom:ray-amd64-ray29
+            image: copandrej/ijs-custom:ray-amd64-ray293
             ports:
             - containerPort: 6379
               name: gcs
@@ -119,7 +119,7 @@ spec:
         spec:
           containers:
           - name: ray-worker
-            image: copandrej/ijs-custom:ray-amd64-ray29
+            image: copandrej/ijs-custom:ray-amd64-ray293
             resources:
               limits:
                 cpu: 4
@@ -142,7 +142,7 @@ spec:
         spec:
           containers:
           - name: ray-worker
-            image: copandrej/ijs-custom:ray-aarch64-ray29
+            image: copandrej/ijs-custom:ray-aarch64-ray293
             resources:
               limits:
                 cpu: "3.75"

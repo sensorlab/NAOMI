@@ -1,12 +1,10 @@
-ray[train,tune,serve,data] == 2.9.1
-evaluate
+ray[train,tune,serve,data] == 2.9.3
 fastapi == 0.104.0
 python-multipart == 0.0.7
-keras
-mlflow
-pillow
-requests
-tensorflow
+keras == 2.15.0
+mlflow == 2.10.2
 flytekit>=1.5.0
+tensorflow
+pillow
 s3fs
 kubernetes
