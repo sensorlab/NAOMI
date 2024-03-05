@@ -58,8 +58,8 @@ echo "Go to VM_IP:$(echo $ARGOCD_PORT) for ArgoCD console!"
 
 # TODO Note that this is hardcoded, some automatic syncing is needed!
 echo "Syncing apps:"
-argocd app sync zenml-server minio kuberay-operator-crds kuberay-operator ray
+argocd app sync minio kuberay-operator-crds kuberay-operator ray
 
 echo "Waiting for zenml pods to start.."
-kubectl wait --for=condition=ready pod -n zen-system --all --timeout=180s
+kubectl wait --for=condition=ready pod -n ray-system --all --timeout=180s
 echo "Done"

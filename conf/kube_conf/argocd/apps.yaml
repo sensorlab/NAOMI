@@ -54,37 +54,6 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: zenml-server
-spec:
-  ignoreDifferences:
-  - group: apps
-    kind: Deployment
-    jsonPointers:
-      - /spec/template/metadata/annotations
-  - group: ""
-    kind: Secret
-    jsonPointers:
-      - /data/ZENML_SERVER_JWT_SECRET_KEY
-  project: default
-  sources:
-    - repoURL: public.ecr.aws/zenml
-      chart: zenml
-      targetRevision: 0.50.0
-      helm:
-        valueFiles:
-          - $values/conf/kube_conf/zenml/values.yaml
-    - repoURL: 'https://github.com/copandrej/IJS-AI_orchestration.git'
-      ref: values
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: zen-system
-  syncPolicy:
-    syncOptions:
-    - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
   name: flyte-binary
 spec:
   project: default

@@ -8,7 +8,6 @@ Our system is managed by ArgoCD, all changes to conf/kube_conf will be picked up
 - Run install script `./scripts/system-install.sh` which installs microk8s and argocd and automatically deploys all our apps on the cluster.
 - (Optional) Run install script `scripts/rasp-install.sh` on any raspberry pi node you want to join to the cluster.
 - Run config script `./scripts/env-prepare.sh` on VM to connect to zenml instance and prepare VM env for running pipelines. This can be run from a different machine (Not tested).
-- Run zenml pipelines by running run.py in zenml projects.
 
 > Scripts should be run from root of repository.
 > For scripts to work entire conf/ folder needs to be included
@@ -25,7 +24,7 @@ git clone https://github.com/copandrej/IJS-AI_orchestration.git && cd IJS-AI_orc
 `scripts/`
 Install & configure scripts for the system
 
-`zenml-projects/`
+`flyte-projects/`
 Examples of full MLOps pipelines
 
 `conf/`

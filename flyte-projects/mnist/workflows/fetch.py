@@ -2,7 +2,9 @@ import logging
 from flytekit import task, PodTemplate
 import numpy as np
 import keras
-from typing import Tuple, Annotated
+from typing import Tuple, Annotated, Dict
+import ray
+from ray import data
 
 from kubernetes.client import V1ResourceRequirements, V1Container, V1PodSpec
 from flytekit import kwtypes
@@ -35,13 +37,15 @@ def fetch_data() -> Tuple[
         Annotated[np.ndarray, kwtypes(y_train=str)],
         Annotated[np.ndarray, kwtypes(x_test=str)],
         Annotated[np.ndarray, kwtypes(y_test=str)],]:
-    ...
+
+
+    def scaling(batch):
+        batch = batch.astype("float32") / 255
+        return batch
+
     # Model / data parameters
     num_classes = 10
     input_shape = (28, 28, 1)
-
-    logging.info("Fetching data...")
-    # Load the data and split it between train and test sets
     (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
 
     logging.info("Preprocessing data...")

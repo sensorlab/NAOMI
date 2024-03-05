@@ -16,7 +16,7 @@ def mnist_train() -> mnist_model:
     model_uri = train(x_train=data[0], y_train=data[1])
     eval(model_uri=model_uri, x_test=data[2], y_test=data[3])
 
-    dep = create_node(deploy, model=model_uri)
+    dep = create_node(deploy, model=model_uri, num_replicas=1)
     test = create_node(test_deploy)
     dep >> test
     return mnist_model(model=model_uri)
@@ -28,7 +28,7 @@ def mnist_retraining() -> mnist_model:
     model_uri = retrain(x_train=data[0], y_train=data[1])
     eval(model_uri=model_uri, x_test=data[2], y_test=data[3])
 
-    dep = create_node(deploy, model=model_uri)
+    dep = create_node(deploy, model=model_uri, num_replicas=1)
     test = create_node(test_deploy)
     dep >> test
     return mnist_model(model=model_uri)

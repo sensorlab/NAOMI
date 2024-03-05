@@ -5,8 +5,6 @@ import numpy as np
 from flytekit import task, PodTemplate
 from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
 
-# TODO :check if using requests as task argument overrides resource limits in podtemplate
-
 
 @task(pod_template=PodTemplate(
     pod_spec=V1PodSpec(
@@ -43,7 +41,7 @@ def train(x_train: np.ndarray, y_train: np.ndarray) \
         ## Uncomment for mlflow logging, make sure mlflow server is running on this ip
         import mlflow
         import mlflow.keras
-        mlflow.set_tracking_uri("http://193.2.205.27:5000")
+        mlflow.set_tracking_uri("http://193.2.205.27:31007")
         # mlflow.set_experiment("mnist")
         mlflow.autolog()
 

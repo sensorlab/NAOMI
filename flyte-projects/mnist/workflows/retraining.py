@@ -36,7 +36,7 @@ def retrain(x_train: np.ndarray, y_train: np.ndarray) \
         import mlflow
         import mlflow.keras
         import keras
-        mlflow.set_tracking_uri("http://193.2.205.27:5000")
+        mlflow.set_tracking_uri("http://193.2.205.27:31007")
 
         # Load the latest version of the model from MLFlow
         model_uri = "models:/mnist_model/latest"

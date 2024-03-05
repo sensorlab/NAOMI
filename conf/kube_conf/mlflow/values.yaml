@@ -1,0 +1,15 @@
+tracking:
+  auth:
+    enabled: false
+minio:
+  enabled: false
+
+config:
+externalS3:
+  host: "193.2.205.27"
+  port: 30085
+  accessKeyID: "minio"
+  accessKeySecret: "miniostorage"
+  protocol: "http"
+  bucket: "mlflow"
+  serveArtifacts: true

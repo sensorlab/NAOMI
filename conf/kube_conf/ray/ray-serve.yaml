@@ -88,11 +88,18 @@ spec:
                 name: ray-logs
             resources:
               limits:
-                cpu: "1"
+                cpu: "4"
                 memory: "8G"
               requests:
-                cpu: "1"
+                cpu: "4"
                 memory: "8G"
+            env:
+              - name: RAY_GRAFANA_IFRAME_HOST
+                value: http://193.2.205.27:30000
+              - name: RAY_GRAFANA_HOST
+                value: http://prometheus-grafana.prometheus-system.svc:80
+              - name: RAY_PROMETHEUS_HOST
+                value: http://prometheus-kube-prometheus-prometheus.prometheus-system.svc:9090
           volumes:
             - name: ray-logs
               emptyDir: {}
@@ -139,9 +146,9 @@ spec:
             resources:
               limits:
                 cpu: "3.75"
-                memory: "5G"
+                memory: "6G"
               requests:
                 cpu: "3.75"
-                memory: "5G"
+                memory: "6G"
           nodeSelector:
             kubernetes.io/arch: "arm64"
