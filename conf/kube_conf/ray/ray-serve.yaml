@@ -88,11 +88,11 @@ spec:
                 name: ray-logs
             resources:
               limits:
-                cpu: "4"
-                memory: "8G"
+                cpu: "2"
+                memory: "6G"
               requests:
-                cpu: "4"
-                memory: "8G"
+                cpu: "2"
+                memory: "6G"
             env:
               - name: RAY_GRAFANA_IFRAME_HOST
                 value: http://193.2.205.27:30000
@@ -106,13 +106,13 @@ spec:
           nodeSelector:
             kubernetes.io/arch: "amd64"
     workerGroupSpecs:
-    # The pod replicas in this group typed worker
+    # The pod replias in this group typed worker
     - replicas: 1
       minReplicas: 1
       maxReplicas: 1
       groupName: amd-group
       rayStartParams:
-        num-cpus: "4"
+        num-cpus: "2"
         resources: "'{\"vm\": 1}'"
       # Pod template
       template:
@@ -122,11 +122,11 @@ spec:
             image: copandrej/ijs-custom:ray-amd64-ray293
             resources:
               limits:
-                cpu: 4
-                memory: "6G"
+                cpu: 2
+                memory: "5G"
               requests:
-                cpu: 4
-                memory: "6G"
+                cpu: 2
+                memory: "5G"
           nodeSelector:
             kubernetes.io/arch: "amd64"
     # maxReplicas should equal to the number of raspberry pi 5 nodes
@@ -135,7 +135,7 @@ spec:
       maxReplicas: 3
       groupName: aarch-group
       rayStartParams:
-        num-cpus: "4"
+        num-cpus: "3"
         resources: "'{\"rasp\": 1}'"
       # Pod template
       template:
@@ -146,9 +146,9 @@ spec:
             resources:
               limits:
                 cpu: "3.75"
-                memory: "6G"
+                memory: "5.5G"
               requests:
                 cpu: "3.75"
-                memory: "6G"
+                memory: "5.5G"
           nodeSelector:
             kubernetes.io/arch: "arm64"

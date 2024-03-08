@@ -1,6 +1,6 @@
 import keras
 import ray
-from typing import Annotated
+from typing import Annotated, List
 import numpy as np
 from flytekit import task, PodTemplate
 from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
@@ -28,7 +28,7 @@ from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
     )
 )
 )
-def train(x_train: np.ndarray, y_train: np.ndarray) \
+def train(x_train: List[any], y_train: List[any]) \
         -> keras.Sequential:
     @ray.remote(num_cpus=2)
     def remo_train(x, y):
@@ -64,7 +64,7 @@ def train(x_train: np.ndarray, y_train: np.ndarray) \
         model.summary()
 
         batch_size = 128
-        epochs = 2
+        epochs = 5
         model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 
         model.fit(x, y, batch_size=batch_size, epochs=epochs, validation_split=0.1)
@@ -72,6 +72,6 @@ def train(x_train: np.ndarray, y_train: np.ndarray) \
         return model
 
     ray.init(address="ray://193.2.205.27:30001", ignore_reinit_error=True)
-    model_uri = remo_train.remote(x_train, y_train)
+    model_uri = remo_train.remote(np.array(x_train), np.array(y_train))
     model_uri = ray.get(model_uri)
     return model_uri

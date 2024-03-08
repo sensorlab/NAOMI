@@ -53,11 +53,11 @@ spec:
           name: minio-console
         resources:
           limits:
-            cpu: 1
-            memory: 1G
+            cpu: 2
+            memory: 4G
           requests:
-            cpu: 1
-            memory: 1G
+            cpu: 2
+            memory: 4G
         volumeMounts:
         - name: minio-storage
           mountPath: /data

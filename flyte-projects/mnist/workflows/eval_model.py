@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, List
 import keras
 from flytekit import task, PodTemplate
 import numpy as np
@@ -29,9 +29,9 @@ from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
     )
 )
 )
-def eval(model_uri: keras.Sequential, x_test: np.ndarray, y_test: np.ndarray) -> float:
+def eval(model_uri: keras.Sequential, x_test: List[any], y_test: List[any]) -> float:
     model = model_uri
-    score = model.evaluate(x_test, y_test, verbose=0)
+    score = model.evaluate(np.array(x_test), np.array(y_test), verbose=0)
     print("Test loss:", score[0])
     print("Test accuracy:", score[1])
     logging.info(f"Test loss: {score[0]}, Test accuracy: {score[1]}")
