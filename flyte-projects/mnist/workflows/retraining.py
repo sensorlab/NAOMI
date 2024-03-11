@@ -1,7 +1,7 @@
 import keras
 from flytekit import task, PodTemplate
 import ray
-from typing import Annotated
+from typing import Annotated, List
 import numpy as np
 from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
 
@@ -28,7 +28,7 @@ from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
     )
 )
 )
-def retrain(x_train: np.ndarray, y_train: np.ndarray) \
+def retrain(x_train: List[any], y_train: List[any]) \
         -> keras.Sequential:
 
     @ray.remote(num_cpus=2)
@@ -49,6 +49,6 @@ def retrain(x_train: np.ndarray, y_train: np.ndarray) \
         return mnist_model
 
     ray.init(address="ray://193.2.205.27:30001", ignore_reinit_error=True)
-    model = mnist_retraining.remote(x_train, y_train)
+    model = mnist_retraining.remote(np.array(x_train), np.array(y_train))
     model = ray.get(model)
     return model

@@ -14,3 +14,4 @@ kubernetes
 pandas
 numpy
 argparse
+prometheus-api-client == 0.5.5

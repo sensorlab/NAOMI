@@ -8,3 +8,4 @@ tensorflow
 pillow
 s3fs
 kubernetes
+prometheus-api-client == 0.5.5

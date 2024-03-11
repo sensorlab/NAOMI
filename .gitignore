@@ -9,3 +9,4 @@ __pycache__
 test.py
 time_comm.py
 *.csv
+*.pyc
