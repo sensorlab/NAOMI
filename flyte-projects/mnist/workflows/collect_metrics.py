@@ -1,11 +1,6 @@
-from typing import Annotated, List
-import keras
 from flytekit import task, PodTemplate
-import numpy as np
-import logging
-
 from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
-
+from prometheus_api_client import PrometheusConnect
 
 @task(pod_template=PodTemplate(
     pod_spec=V1PodSpec(
@@ -29,10 +24,9 @@ from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
     )
 )
 )
-def eval(model_uri: keras.Sequential, x_test: List[any], y_test: List[any]) -> float:
-    model = model_uri
-    score = model.evaluate(np.array(x_test), np.array(y_test), verbose=0)
-    print("Test loss:", score[0])
-    print("Test accuracy:", score[1])
-    logging.info(f"Test loss: {score[0]}, Test accuracy: {score[1]}")
-    return score[1]
+def trigger_retraining() -> bool:
+    prom = PrometheusConnect(url="http://193.2.205.27:30002/", disable_ssl=True)
+    if (int(prom.custom_query(query="sum(ray_serve_deployment_replica_healthy{})")[0]["value"][1]) < 9):
+        return True
+    else:
+        return False

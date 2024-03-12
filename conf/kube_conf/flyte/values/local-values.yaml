@@ -5,8 +5,8 @@ configuration:
     dbname: flyteadmin 
   storage:
     type: minio
-    metadataContainer: my-s3-bucket #This is the default bucket created with Minio. Controlled by the MINIO_DEFAULT_BUCKETS env var in the local-flyte-resources.yaml manifest
-    userDataContainer: my-s3-bucket
+    metadataContainer: flyte #This is the default bucket created with Minio. Controlled by the MINIO_DEFAULT_BUCKETS env var in the local-flyte-resources.yaml manifest
+    userDataContainer: flyte
     provider: s3
     providerConfig:
       s3:

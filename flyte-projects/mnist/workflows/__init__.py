@@ -4,6 +4,7 @@ from .eval_model import eval
 from .fetch import fetch_data
 from .test_deployment import test_deploy
 from .retraining import retrain
+from .collect_metrics import trigger_retraining
 
 __all__ = [
     "train",
@@ -11,5 +12,6 @@ __all__ = [
     "eval",
     "fetch_data",
     "test_deploy",
-    "retrain"
+    "retrain",
+    "trigger_retraining"
 ]
