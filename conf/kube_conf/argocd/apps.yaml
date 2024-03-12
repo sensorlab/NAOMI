@@ -126,6 +126,12 @@ spec:
   syncPolicy:
     syncOptions:
     - CreateNamespace=true
+  ignoreDifferences:
+    - group: "*"
+      kind: "*"
+      jsonPointers:
+        - /data/password
+        - /data/postgres-password
 ---
 apiVersion: v1
 kind: Secret
