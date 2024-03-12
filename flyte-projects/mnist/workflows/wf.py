@@ -17,8 +17,8 @@ mnist_model = typing.NamedTuple("mnist_model", [("model", keras.Sequential)])
 @workflow
 def mnist_train() -> str:
     data = fetch_data()
-    model_uri = train(x_train=data[0], y_train=data[1])
-    eval(model_uri=model_uri, x_test=data[2], y_test=data[3])
+    model_uri = train(train_ds=data[0])
+    eval(model_uri=model_uri, x_test=data[1], y_test=data[2])
 
     dep = create_node(deploy, model=model_uri, num_replicas=1)
     test = create_node(test_deploy)
@@ -30,10 +30,10 @@ def mnist_train() -> str:
 @workflow
 def mnist_retraining() -> str:
     data = fetch_data()
-    model_uri = retrain(x_train=data[0], y_train=data[1])
-    eval(model_uri=model_uri, x_test=data[2], y_test=data[3])
+    model_uri = retrain(train_ds=data[0])
+    eval(model_uri=model_uri, x_test=data[1], y_test=data[2])
 
-    dep = create_node(deploy, model=model_uri, num_replicas=9)
+    dep = create_node(deploy, model=model_uri, num_replicas=4)
     test = create_node(test_deploy)
     dep >> test
     mnist_model(model=model_uri)

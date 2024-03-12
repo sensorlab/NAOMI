@@ -35,7 +35,6 @@ import pyarrow.fs
 )
 )
 def fetch_data() -> Tuple[
-        Annotated[List[any], kwtypes(x_train=str)],
         Annotated[List[any], kwtypes(y_train=str)],
         Annotated[List[any], kwtypes(x_test=str)],
         Annotated[List[any], kwtypes(y_test=str)],]:
@@ -77,10 +76,10 @@ def fetch_data() -> Tuple[
 
         
 
-    train, test = ray.get(data_load.remote(custom_fs))
-    x_train = [d["image"] for d in train if "image" in d]
-    y_train = [d["path"] for d in train if "path" in d]
+    train_ds, test = ray.get(data_load.remote(custom_fs))
+    # x_train = [d["image"] for d in train if "image" in d]
+    # y_train = [d["path"] for d in train if "path" in d]
     x_test = [d["image"] for d in test if "image" in d]
     y_test = [d["path"] for d in test if "path" in d]
 
-    return x_train, y_train, x_test, y_test
+    return train_ds, x_test, y_test

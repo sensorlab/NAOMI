@@ -10,3 +10,4 @@ test.py
 time_comm.py
 *.csv
 *.pyc
+nohup.out
