@@ -105,3 +105,76 @@ spec:
     syncOptions:
       - CreateNamespace=true
 ---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mlflow
+spec:
+  project: default
+  sources:
+    - repoURL: registry-1.docker.io/bitnamicharts
+      targetRevision: 0.11.0
+      chart: mlflow
+      helm:
+        valueFiles:
+          - $values/conf/kube_conf/mlflow/values.yaml
+    - repoURL: 'https://github.com/copandrej/IJS-AI_orchestration.git'
+      ref: values
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: mlflow
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    argocd.argoproj.io/secret-type: repository
+  name: docker-io-helm-oci
+  namespace: argocd
+stringData:
+  url: registry-1.docker.io/bitnamicharts/mlflow
+  name: bitnamicharts
+  type: helm
+  enableOCI: "true"
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+spec:
+  project: default
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 48.2.1
+      helm:
+        valueFiles:
+          - $values/conf/kube_conf/prometheus-grafana/values/values.yaml
+    - repoURL: 'https://github.com/copandrej/IJS-AI_orchestration.git'
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prometheus-system
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-grafana-configs
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/copandrej/IJS-AI_orchestration.git'
+    path: conf/kube_conf/prometheus-grafana
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: prometheus-system
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+---
