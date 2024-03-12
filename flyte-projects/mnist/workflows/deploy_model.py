@@ -76,4 +76,4 @@ def deploy(model: keras.Sequential, num_replicas: int) -> None:
 
     ray.init(address="ray://193.2.205.27:30001", ignore_reinit_error=True)
     serve.run(Hello.bind(), name="mnist", route_prefix="/mnist")
-    serve.delete("text_ml_app")  # placeholder removal
+    serve.delete("Test")  # placeholder removal
