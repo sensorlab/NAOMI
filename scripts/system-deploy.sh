@@ -54,12 +54,12 @@ echo "Please enter a new password for the 'admin' account:"
 read -s NEW_PASSWORD
 argocd account update-password --current-password $INITIAL_PASSWORD --new-password $NEW_PASSWORD
 
-echo "Go to VM_IP:$(echo $ARGOCD_PORT) for ArgoCD console!"
+echo "Go to $(echo $VM_IP):$(echo $ARGOCD_PORT) for ArgoCD console!"
 
 # TODO Note that this is hardcoded, some automatic syncing is needed!
 echo "Syncing apps:"
-argocd app sync minio kuberay-operator-crds kuberay-operator ray
+argocd app sync minio kuberay-operator-crds kuberay-operator ray flyte-binary flyte-resources mlflow prometheus prometheus-grafana-configs
 
-echo "Waiting for zenml pods to start.."
+echo "Waiting for ray pods to start.."
 kubectl wait --for=condition=ready pod -n ray-system --all --timeout=180s
 echo "Done"

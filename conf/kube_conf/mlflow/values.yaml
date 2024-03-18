@@ -6,7 +6,7 @@ minio:
 
 config:
 externalS3:
-  host: "193.2.205.27"
+  host: "minio.minio.svc.cluster.local"
   port: 30085
   accessKeyID: "minio"
   accessKeySecret: "miniostorage"

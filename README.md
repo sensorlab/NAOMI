@@ -2,6 +2,9 @@
 
 Our system is managed by ArgoCD, all changes to conf/kube_conf will be picked up by Argo and can be synced manually or automatically to our cluster.
 
+If running on a different VM, IPs are currently hardcoded for minio in the conf files and need to be changed. (files: `conf/kube_conf/flyte/values/local-values.yaml`,`conf/kube_conf/mlflow/values.yaml` )
+Number of replicas and resources for Ray should be adjusted in `conf/kube_conf/ray/ray-serve.yaml`.
+
 ### To recreate our system:
 - Use at least one node with Ubuntu installed (Tested with 22.04.1-Ubuntu).
 - Clone the repo.
