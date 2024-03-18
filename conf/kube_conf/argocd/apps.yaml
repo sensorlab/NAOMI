@@ -1,24 +1,6 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kuberay-operator-crds
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/ray-project/kuberay
-    targetRevision: v1.0.0-rc.0
-    path: helm-chart/kuberay-operator/crds
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: ray-system
-  syncPolicy:
-    syncOptions:
-    - Replace=true
-    - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
   name: kuberay-operator
 spec:
   project: default
@@ -26,14 +8,13 @@ spec:
     repoURL: https://github.com/ray-project/kuberay
     targetRevision: v1.0.0-rc.0
     path: helm-chart/kuberay-operator
-    helm:
-      skipCrds: true
   destination:
     server: https://kubernetes.default.svc
     namespace: ray-system
   syncPolicy:
     syncOptions:
     - CreateNamespace=true
+    - ServerSideApply=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
