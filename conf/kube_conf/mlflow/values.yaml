@@ -7,6 +7,12 @@ tracking:
       http: 80
     nodePorts:
       http: "31007"
+  nodeSelector:
+    kubernetes.io/arch: "amd64"
+
+run:
+  nodeSelector:
+    kubernetes.io/arch: "amd64"
 
 minio:
   enabled: false
