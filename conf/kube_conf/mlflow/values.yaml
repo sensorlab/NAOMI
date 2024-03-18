@@ -1,6 +1,13 @@
 tracking:
   auth:
     enabled: false
+  service:
+    type: NodePort
+    ports:
+      http: 80
+    nodePorts:
+      http: 31007
+
 minio:
   enabled: false
 

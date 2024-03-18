@@ -166,6 +166,7 @@ spec:
     namespace: prometheus-system
   syncPolicy:
     syncOptions:
+    - ServerSideApply=true
     - CreateNamespace=true
 ---
 apiVersion: argoproj.io/v1alpha1
