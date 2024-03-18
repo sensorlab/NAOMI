@@ -86,7 +86,10 @@ spec:
                 memory: "6G"
             env:
               - name: RAY_GRAFANA_IFRAME_HOST
-                value: http://193.2.205.27:30000
+                valueFrom: # kubectl create configmap grafana-ip --from-literal=GRAFANA_IP="http://193.2.205.27:30000" -n ray-system
+                  configMapKeyRef:
+                    key: GRAFANA_IP
+                    name: grafana-ip
               - name: RAY_GRAFANA_HOST
                 value: http://prometheus-grafana.prometheus-system.svc:80
               - name: RAY_PROMETHEUS_HOST
@@ -120,10 +123,10 @@ spec:
                 memory: "5G"
           nodeSelector:
             kubernetes.io/arch: "amd64"
-    # maxReplicas should equal to the number of raspberry pi 5 nodes
-    - replicas: 3
-      minReplicas: 3
-      maxReplicas: 3
+    # maxReplicas should equal to the number of raspberry pi 5 nodes, adjust as needed
+    - replicas: 0
+      minReplicas: 0
+      maxReplicas: 0
       groupName: aarch-group
       rayStartParams:
         num-cpus: "3"

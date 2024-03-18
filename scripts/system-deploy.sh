@@ -56,6 +56,9 @@ argocd account update-password --current-password $INITIAL_PASSWORD --new-passwo
 
 echo "Go to $(echo $VM_IP):$(echo $ARGOCD_PORT) for ArgoCD console!"
 
+# fix for hardcoded grafana ip
+kubectl create configmap grafana-ip --from-literal=GRAFANA_IP="http://$(hostname -i):30000" -n ray-system
+
 # TODO Note that this is hardcoded, some automatic syncing is needed!
 echo "Syncing apps:"
 argocd app sync minio kuberay-operator-crds kuberay-operator ray flyte-binary flyte-resources mlflow prometheus prometheus-grafana-configs
