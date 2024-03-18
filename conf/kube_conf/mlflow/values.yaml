@@ -6,7 +6,7 @@ tracking:
     ports:
       http: 80
     nodePorts:
-      http: 31007
+      http: "31007"
 
 minio:
   enabled: false
