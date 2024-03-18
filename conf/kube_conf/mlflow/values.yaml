@@ -7,7 +7,7 @@ minio:
 config:
 externalS3:
   host: "minio.minio.svc.cluster.local"
-  port: 30085
+  port: 9000
   accessKeyID: "minio"
   accessKeySecret: "miniostorage"
   protocol: "http"
