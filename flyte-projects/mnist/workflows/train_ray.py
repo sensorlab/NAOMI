@@ -97,7 +97,7 @@ def train(train_ds: List[any]) -> keras.Sequential:
     train_dataset = ray.data.from_items(train_ds)
 
     config = {"batch_size": 128, "epochs": 10}
-    scaling_config = ScalingConfig(num_workers=5, use_gpu=False)
+    scaling_config = ScalingConfig(num_workers=2, use_gpu=False)
     run_config = RunConfig(storage_filesystem=custom_fs, storage_path="raybuck/training")
 
     trainer = TensorflowTrainer(

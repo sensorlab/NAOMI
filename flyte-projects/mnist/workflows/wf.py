@@ -33,7 +33,7 @@ def mnist_retraining() -> str:
     model_uri = retrain(train_ds=data[0])
     eval(model_uri=model_uri, x_test=data[1], y_test=data[2])
 
-    dep = create_node(deploy, model=model_uri, num_replicas=4)
+    dep = create_node(deploy, model=model_uri, num_replicas=2)
     test = create_node(test_deploy)
     dep >> test
     mnist_model(model=model_uri)

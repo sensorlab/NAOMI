@@ -106,7 +106,7 @@ spec:
       maxReplicas: 1
       groupName: amd-group
       rayStartParams:
-        num-cpus: "2"
+        num-cpus: "4"
         resources: "'{\"vm\": 1}'"
       # Pod template
       template:
@@ -116,11 +116,11 @@ spec:
             image: copandrej/ijs-custom:ray-amd64-ray293
             resources:
               limits:
-                cpu: 2
-                memory: "5G"
+                cpu: 4
+                memory: "6G"
               requests:
-                cpu: 2
-                memory: "5G"
+                cpu: 4
+                memory: "6G"
           nodeSelector:
             kubernetes.io/arch: "amd64"
     # maxReplicas should equal to the number of raspberry pi 5 nodes, adjust as needed
