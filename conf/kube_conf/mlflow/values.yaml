@@ -17,6 +17,9 @@ run:
 minio:
   enabled: false
 
+postgresql:
+  enabled: false
+
 config:
 externalS3:
   host: "minio.minio.svc.cluster.local"
@@ -26,3 +29,10 @@ externalS3:
   protocol: "http"
   bucket: "mlflow"
   serveArtifacts: true
+
+externalDatabase:
+  host: "postgres.flyte.svc.cluster.local"
+  port: 5432
+  password: "postgres"
+  user: "postgres"
+  database: "flyteadmin"
