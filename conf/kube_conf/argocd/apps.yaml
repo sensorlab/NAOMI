@@ -8,6 +8,10 @@ spec:
     repoURL: https://github.com/ray-project/kuberay
     targetRevision: v1.0.0-rc.0
     path: helm-chart/kuberay-operator
+    helm:
+      values: |
+        nodeSelector:
+          kubernetes.io/arch: "amd64"
   destination:
     server: https://kubernetes.default.svc
     namespace: ray-system
