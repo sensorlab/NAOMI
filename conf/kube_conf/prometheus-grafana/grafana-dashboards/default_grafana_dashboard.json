@@ -2735,7 +2735,7 @@
     "schemaVersion": 27,
     "style": "dark",
     "tags": [
-        "rayVersion:2.9.1"
+        "rayVersion:2.10.0"
     ],
     "templating": {
         "list": [
