@@ -42,3 +42,7 @@ Yaml files for kubernetes and software running on kubernetes. Single source of t
 
 `docker/`
 Centralized dockerfiles and building scripts. TBC.
+
+## Architecture
+
+![arch](docs/assets/arch.png)
