@@ -11,3 +11,4 @@ time_comm.py
 *.csv
 *.pyc
 nohup.out
+!arch.png
