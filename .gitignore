@@ -12,3 +12,5 @@ time_comm.py
 *.pyc
 nohup.out
 !arch.png
+results/
+dep_t_tester.bash
