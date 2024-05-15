@@ -1,8 +1,5 @@
 import logging
-import os
 import requests
-from keras.datasets import mnist
-from PIL import Image
 from flytekit import task, PodTemplate
 from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
 
@@ -46,7 +43,7 @@ def test_deploy() -> None:
     }
 
 
-    response = requests.post("http://193.2.205.27/ray-api/qoe/", json=data)
+    response = requests.post("http://193.2.205.63/ray-api/qoe/", json=data)
     response_json = response.json()
     logging.info(response_json)
     print(response_json)

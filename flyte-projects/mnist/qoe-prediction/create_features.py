@@ -30,36 +30,35 @@ from numpy import ndarray, dtype
     )
 )
 )
-def fetch_data() -> tuple[ndarray[Any, dtype[Any]], ndarray[Any, dtype[Any]]]:
+def fetch_data_pd(N: int) -> str:
 
     # Create an S3 filesystem object
     s3_fs = s3fs.S3FileSystem(
         key='minio',
         secret='miniostorage',
-        endpoint_url='http://193.2.205.27:30085',
+        endpoint_url='http://193.2.205.63:30085',
         use_ssl=False  # Note: use_ssl should be False if your MinIO server is not using HTTPS
     )
 
     # Specify the path to the CSV file in MinIO
-    file_path = 'raybuck/qoe_data/liveCell.csv'
+    file_path = f'raybuck/qoe_data/liveCell-x{N}.csv'
 
     # Use pandas to read the CSV file directly from MinIO
     with s3_fs.open(file_path, 'rb') as f:
-        full_df = pd.read_csv(f)
+        df = pd.read_csv(f)
 
-    features = full_df[['nrCellIdentity', 'pdcpBytesDl', 'pdcpBytesUl']]
-    print("Dataframe:")
-    print(features)
+    # Select the required columns
+    df = df[['nrCellIdentity', 'pdcpBytesDl', 'pdcpBytesUl']]
 
-    features_cellc2b2 = features[features['nrCellIdentity'] == "c2/B2"]
-    print("Dataframe for cell : c2/B2")
-    print(features_cellc2b2)
-    print('Previous Data Types are --> ', features_cellc2b2.dtypes)
-    features_cellc2b2["pdcpBytesDl"] = pd.to_numeric(features_cellc2b2["pdcpBytesDl"], downcast="float")
-    features_cellc2b2["pdcpBytesUl"] = pd.to_numeric(features_cellc2b2["pdcpBytesUl"], downcast="float")
-    print('New Data Types are --> ', features_cellc2b2.dtypes)
+    # Filter the data
+    df = df[df['nrCellIdentity'] == "c2/B2"]
 
-    features_cellc2b2 = features_cellc2b2[['pdcpBytesDl', 'pdcpBytesUl']]
+    # Convert the data types
+    df["pdcpBytesDl"] = pd.to_numeric(df["pdcpBytesDl"], downcast="float")
+    df["pdcpBytesUl"] = pd.to_numeric(df["pdcpBytesUl"], downcast="float")
+
+    # Select the required columns
+    df = df[['pdcpBytesDl', 'pdcpBytesUl']]
 
     def split_series(series, n_past, n_future):
         x, y = list(), list()
@@ -74,10 +73,25 @@ def fetch_data() -> tuple[ndarray[Any, dtype[Any]], ndarray[Any, dtype[Any]]]:
             y.append(future)
         return np.array(x), np.array(y)
 
-    x, y = split_series(features_cellc2b2.values, 10, 1)
+    x, y = split_series(df.values, 10, 1)
     x = x.reshape((x.shape[0], x.shape[1], x.shape[2]))
     y = y.reshape((y.shape[0], y.shape[2]))
     print(x.shape)
     print(y.shape)
 
-    return x, y
+    x_shapes = [str(xi.shape) for xi in x]  # Store the original shapes
+    y_shapes = [str(yi.shape) for yi in y]  # Store the original shapes
+    x = x.reshape((x.shape[0], -1))  # Flatten the arrays
+    y = y.reshape((y.shape[0], -1))  # Flatten the arrays
+    df_new = pd.DataFrame({'x': list(x), 'y': list(y), 'x_shape': x_shapes, 'y_shape': y_shapes})
+
+    features_url = f'raybuck/qoe_data/features-x{N}.csv'
+    # Write the result to a new CSV file
+    with s3_fs.open(features_url, 'w') as f:
+        df_new.to_csv(f, index=False)
+
+    return features_url
+
+
+if __name__ == "__main__":
+    fetch_data_pd(N=10)

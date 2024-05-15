@@ -14,10 +14,12 @@ microk8s enable storage
 microk8s enable dashboard
 microk8s status --wait-ready
 
-# Alias microk8s kubectl to kubectl
-sudo snap alias microk8s.kubectl kubectl
+# Alias microk8s kubectl to kubectl, if kubectl not installed
+# sudo snap alias microk8s.kubectl kubectl
+microk8s config > $HOME/.kube/config
+export KUBECONFIG=/home/bbertalanic/.kube/config
 echo "Waiting for system pods.."
-kubectl wait --for=condition=ready pod -n kube-system --all --timeout=180s
+kubectl wait --for=condition=ready pod -n kube-system --all --timeout=500s
 echo "Done"
 
 # Install ArgoCD on kubernetes + apply our system's source of truth
@@ -36,7 +38,7 @@ rm argocd-linux-amd64
 microk8s config > $HOME/.kube/config
 
 echo "Waiting for argocd pods to start.."
-kubectl wait --for=condition=ready pod -n argocd --all --timeout=180s
+kubectl wait --for=condition=ready pod -n argocd --all --timeout=300s
 echo "Done"
 
 # Retrieve the initial password
@@ -56,13 +58,14 @@ argocd account update-password --current-password $INITIAL_PASSWORD --new-passwo
 
 echo "Go to $(echo $VM_IP):$(echo $ARGOCD_PORT) for ArgoCD console!"
 
+kubectl create ns ray-system
 # fix for hardcoded grafana ip
 kubectl create configmap grafana-ip --from-literal=GRAFANA_IP="http://$(hostname -i):30000" -n ray-system
 
 # TODO Note that this is hardcoded, some automatic syncing is needed!
 echo "Syncing apps:"
-argocd app sync minio kuberay-operator-crds kuberay-operator ray flyte-binary flyte-resources mlflow prometheus prometheus-grafana-configs
+argocd app sync minio kuberay-operator ray flyte-binary flyte-resources mlflow prometheus prometheus-grafana-configs --retry-limit 30
 
 echo "Waiting for ray pods to start.."
-kubectl wait --for=condition=ready pod -n ray-system --all --timeout=180s
+kubectl wait --for=condition=ready pod -A --all --timeout=800s
 echo "Done"

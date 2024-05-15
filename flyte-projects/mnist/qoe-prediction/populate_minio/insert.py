@@ -5,7 +5,7 @@ from io import StringIO, BytesIO
 import gzip
 
 # Placeholder credentials for MinIO
-MINIO_ENDPOINT = '193.2.205.27:30085'
+MINIO_ENDPOINT = '193.2.205.63:30085'
 MINIO_ACCESS_KEY = 'minio'
 MINIO_SECRET_KEY = 'miniostorage'
 MINIO_BUCKET_NAME = 'raybuck'
@@ -45,11 +45,14 @@ def time(df):
      df['measTimeStampRf'] = df['measTimeStampRf'].apply(lambda x: str(x))
      return df
 
-def populatedb():
+def populatedb(N):
     df = pd.read_json('cell.json.gz', lines=True)
     df = df[['cellMeasReport']].dropna()
     df = jsonToTable(df)
     df = time(df)
+
+    # Duplicate the dataframe N times
+    df = pd.concat([df]*N, ignore_index=True)
 
     # Save dataframe to a temporary CSV file
     csv_buffer = StringIO()
@@ -59,6 +62,9 @@ def populatedb():
     # Upload CSV data to MinIO
     db = INSERTDATA()
     csv_bytes = BytesIO(csv_data.encode('utf-8'))
-    db.minio_client.put_object(MINIO_BUCKET_NAME, 'qoe_data/liveCell.csv', csv_bytes, len(csv_data))
+    db.minio_client.put_object(MINIO_BUCKET_NAME, f'qoe_data/liveCell-x{N}.csv', csv_bytes, len(csv_data))
 
-populatedb()
+# Call the function with the desired multiplier
+populatedb(1)
+#populatedb(10)
+#populatedb(100)

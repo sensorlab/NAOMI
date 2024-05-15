@@ -10,6 +10,7 @@ if ! which conda > /dev/null; then
     # initialize conda
     conda init bash
     eval "$($HOME/miniconda3/bin/conda shell.bash hook)"
+    export PATH=$PATH:$HOME/miniconda3/condabin
 fi
 
 # Check if the 'ray' environment exists
@@ -41,7 +42,7 @@ case ${answer:0:1} in
 esac
 
 #connect flyte
-flytectl config init --host=$IP:31081 --storage=s3 --console=$IP:31082 --insecure
+flytectl config init --host=$IP:31081 --console=$IP:31082 --insecure
 
 rm temp.yaml # cleanup
 export PATH=$PATH:$HOME/miniconda3/bin

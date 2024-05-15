@@ -31,7 +31,10 @@ from fastapi import FastAPI, HTTPException
 def deploy(model: keras.Sequential, num_replicas: int) -> None:
     app = FastAPI(debug=True)
 
-    @serve.deployment(name="qoe_prediction", num_replicas=num_replicas, ray_actor_options={"num_cpus": 1, "num_gpus": 0}, max_concurrent_queries=100000) # , "resources": {"rasp":0.25}
+    @serve.deployment(name="qoe_prediction", num_replicas="auto",
+                      ray_actor_options={"num_cpus": 0, "num_gpus": 0, "memory": 0},
+                      max_concurrent_queries=1000,
+                      autoscaling_config={"min_replicas": 1, "max_replicas": 1})  # , "resources": {"rasp":0.25}
     @serve.ingress(app)
     class Qoe:
         def __init__(self):
@@ -59,6 +62,6 @@ def deploy(model: keras.Sequential, num_replicas: int) -> None:
         def get(self):
             return "Welcome to the model server."
 
-    ray.init(address="ray://193.2.205.27:30001", ignore_reinit_error=True)
+    ray.init(address="ray://193.2.205.63:30001", ignore_reinit_error=True)
     serve.run(Qoe.bind(), name="qoe_prediction", route_prefix="/qoe")
     serve.delete("Test")  # placeholder removal
