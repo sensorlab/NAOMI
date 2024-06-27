@@ -86,14 +86,14 @@ spec:
                 memory: "6G"
             env:
               - name: RAY_GRAFANA_IFRAME_HOST
-                valueFrom: # kubectl create configmap grafana-ip --from-literal=GRAFANA_IP="http://193.2.205.27:30000" -n ray-system
+                valueFrom:
                   configMapKeyRef:
                     key: GRAFANA_IP
                     name: grafana-ip
               - name: RAY_GRAFANA_HOST
-                value: http://prometheus-grafana.prometheus-system.svc:80
+                value: http://{{ .Release.Name }}-grafana
               - name: RAY_PROMETHEUS_HOST
-                value: http://prometheus-kube-prometheus-prometheus.prometheus-system.svc:9090
+                value: http://{{ .Release.Name }}-kube-prometheus-stack-prometheus:9090
           volumes:
             - name: ray-logs
               emptyDir: {}

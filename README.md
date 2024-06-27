@@ -1,9 +1,8 @@
 # Self-Evolving AI/ML Workflow
 
-Our system is managed by ArgoCD, all changes to conf/kube_conf will be picked up by Argo and can be synced manually or automatically to our cluster.
+**TODO**
 
 If running on a different VM, IPs are currently hardcoded in example flyte workflow and need to be changed: `flyte-projects/mnist/workflows/*`
-Number of replicas and resources for Ray should be adjusted for the specific infrastructure in `conf/kube_conf/ray/ray-serve.yaml` and applied to the cluster using kubectl.
 
 ### Minimal requirements:
 12 CPUs
@@ -31,18 +30,16 @@ git clone https://github.com/copandrej/IJS-AI_orchestration.git && cd IJS-AI_orc
 ```
 
 ## Project
-`scripts/`
-Install & configure scripts for the system
 
-`flyte-projects/`
+`workflow_examples/`
 Examples of full MLOps pipelines
 
-`conf/`
-Yaml files for kubernetes and software running on kubernetes. Single source of truth for ArgoCD
 
-`docker/`
-Centralized dockerfiles and building scripts. TBC.
+`scripts/`
+Install & configure scripts for the system DEPRECATED
 
 ## Architecture
 
-![arch](docs/assets/arch.png)
+![arch](fig/arch.png)
+![arch](fig/actor_workflow_diag.png)
+![arch](fig/all_actors_workflow_diag.png)

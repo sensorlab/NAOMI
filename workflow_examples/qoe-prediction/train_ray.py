@@ -43,7 +43,7 @@ import pandas as pd
 )
 def train(data_url: str, epochs: int = 1, batch_size: int = 10) -> keras.Sequential:
 
-    @ray.remote(resources={"vm": 1}, num_cpus=4)
+    @ray.remote(resources={"vm": 1}, num_cpus=1)
     def ray_training(x, y, epochs: int):
         mlflow.set_tracking_uri("http://193.2.205.63:31007")
         mlflow.set_experiment("O-RAN qoe prediction service")

@@ -1,0 +1,16 @@
+general:
+  ip: "<CHANGE-ME>"
+
+
+# Flyte
+flyte-binary:
+  configuration:
+    storage:
+      providerConfig:
+        s3:
+          endpoint: "http://<CHANGE-ME>:30085"
+    inline:
+      plugins:
+        k8s:
+          default-env-vars:
+            - FLYTE_AWS_ENDPOINT: "http://<CHANGE-ME>:30085"

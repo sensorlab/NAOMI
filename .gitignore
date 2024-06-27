@@ -14,3 +14,5 @@ nohup.out
 !arch.png
 results/
 dep_t_tester.bash
+*.tgz
+
