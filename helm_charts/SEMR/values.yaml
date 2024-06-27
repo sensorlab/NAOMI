@@ -1,6 +1,55 @@
 general:
   ip: "193.2.205.63"
 
+#################################################
+#
+# Ray
+#
+################################################
+headGroupSpecs:
+  rayHead:
+    image: copandrej/ijs-custom:ray-amd64-ray210
+    resources:
+      limits:
+        cpu: "2"
+        memory: "6G"
+      requests:
+        cpu: "2"
+        memory: "6G"
+
+workerGroups:
+  amdGroup:
+    replicas: 1
+    minReplicas: 1
+    maxReplicas: 1
+    rayStartParams:
+      numCpus: "1"
+    container:
+      image: copandrej/ijs-custom:ray-amd64-ray210
+      resources:
+        limits:
+          cpu: "1"
+          memory: "6G"
+        requests:
+          cpu: "1"
+          memory: "6G"
+
+  aarchGroup:
+    replicas: 0
+    minReplicas: 0
+    maxReplicas: 0
+    rayStartParams:
+      numCpus: "1"
+    container:
+      image: copandrej/ijs-custom:ray-aarch64-ray210
+      resources:
+        limits:
+          cpu: "1"
+          memory: "5G"
+        requests:
+          cpu: "1"
+          memory: "5G"
+
 
 #################################################
 #
