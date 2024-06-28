@@ -68,47 +68,47 @@ spec:
           nodeSelector:
             kubernetes.io/arch: "amd64"
 
-  workerGroupSpecs:
-    - replicas: {{ .Values.workerGroups.amdGroup.replicas }}
-      minReplicas: {{ .Values.workerGroups.amdGroup.minReplicas }}
-      maxReplicas: {{ .Values.workerGroups.amdGroup.maxReplicas }}
-      groupName: amd-group
-      rayStartParams:
-        num-cpus: "{{ .Values.workerGroups.amdGroup.rayStartParams.numCpus }}"
-        resources: "'{\"vm\": 1}'"
-      template:
-        spec:
-          containers:
-            - name: ray-worker
-              image: {{ .Values.workerGroups.amdGroup.container.image }}
-              resources:
-                limits:
-                  cpu: "{{ .Values.workerGroups.amdGroup.container.resources.limits.cpu }}"
-                  memory: "{{ .Values.workerGroups.amdGroup.container.resources.limits.memory }}"
-                requests:
-                  cpu: "{{ .Values.workerGroups.amdGroup.container.resources.requests.cpu }}"
-                  memory: "{{ .Values.workerGroups.amdGroup.container.resources.requests.memory }}"
-          nodeSelector:
-            kubernetes.io/arch: "amd64"
+    workerGroupSpecs:
+      - replicas: {{ .Values.workerGroups.amdGroup.replicas }}
+        minReplicas: {{ .Values.workerGroups.amdGroup.minReplicas }}
+        maxReplicas: {{ .Values.workerGroups.amdGroup.maxReplicas }}
+        groupName: amd-group
+        rayStartParams:
+          num-cpus: "{{ .Values.workerGroups.amdGroup.rayStartParams.numCpus }}"
+          resources: "'{\"vm\": 1}'"
+        template:
+          spec:
+            containers:
+              - name: ray-worker
+                image: {{ .Values.workerGroups.amdGroup.container.image }}
+                resources:
+                  limits:
+                    cpu: "{{ .Values.workerGroups.amdGroup.container.resources.limits.cpu }}"
+                    memory: "{{ .Values.workerGroups.amdGroup.container.resources.limits.memory }}"
+                  requests:
+                    cpu: "{{ .Values.workerGroups.amdGroup.container.resources.requests.cpu }}"
+                    memory: "{{ .Values.workerGroups.amdGroup.container.resources.requests.memory }}"
+            nodeSelector:
+              kubernetes.io/arch: "amd64"
 
-    - replicas: {{ .Values.workerGroups.aarchGroup.replicas }}
-      minReplicas: {{ .Values.workerGroups.aarchGroup.minReplicas }}
-      maxReplicas: {{ .Values.workerGroups.aarchGroup.maxReplicas }}
-      groupName: aarch-group
-      rayStartParams:
-        num-cpus: "{{ .Values.workerGroups.aarchGroup.rayStartParams.numCpus }}"
-        resources: "'{\"rasp\": 1}'"
-      template:
-        spec:
-          containers:
-            - name: ray-worker
-              image: {{ .Values.workerGroups.aarchGroup.container.image }}
-              resources:
-                limits:
-                  cpu: "{{ .Values.workerGroups.aarchGroup.container.resources.limits.cpu }}"
-                  memory: "{{ .Values.workerGroups.aarchGroup.container.resources.limits.memory }}"
-                requests:
-                  cpu: "{{ .Values.workerGroups.aarchGroup.container.resources.requests.cpu }}"
-                  memory: "{{ .Values.workerGroups.aarchGroup.container.resources.requests.memory }}"
-          nodeSelector:
-            kubernetes.io/arch: "arm64"
+      - replicas: {{ .Values.workerGroups.aarchGroup.replicas }}
+        minReplicas: {{ .Values.workerGroups.aarchGroup.minReplicas }}
+        maxReplicas: {{ .Values.workerGroups.aarchGroup.maxReplicas }}
+        groupName: aarch-group
+        rayStartParams:
+          num-cpus: "{{ .Values.workerGroups.aarchGroup.rayStartParams.numCpus }}"
+          resources: "'{\"rasp\": 1}'"
+        template:
+          spec:
+            containers:
+              - name: ray-worker
+                image: {{ .Values.workerGroups.aarchGroup.container.image }}
+                resources:
+                  limits:
+                    cpu: "{{ .Values.workerGroups.aarchGroup.container.resources.limits.cpu }}"
+                    memory: "{{ .Values.workerGroups.aarchGroup.container.resources.limits.memory }}"
+                  requests:
+                    cpu: "{{ .Values.workerGroups.aarchGroup.container.resources.requests.cpu }}"
+                    memory: "{{ .Values.workerGroups.aarchGroup.container.resources.requests.memory }}"
+            nodeSelector:
+              kubernetes.io/arch: "arm64"
