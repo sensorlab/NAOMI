@@ -1,20 +1,18 @@
 # Self-Evolving AI/ML Workflow System
 
-AI/ML workflow solution is an MLOps system designed for deployment on a heterogeneous Kubernetes cluster with ARM and x86 GNU/Linux nodes, simulating distributed edge infrastructure common in RAN (Radio Access Networks), network slices and MEC (Multi-Access Edge Computing) devices.
+The Self-Evolving AI/ML Workflow System is a production MLOps solution designed for deployment on a heterogeneous Kubernetes cluster.
 
-The system leverages the Ray framework for data processing, model training, and model inference, distributing the computational load on edge and non-edge nodes. 
-Data preparation can be done with frameworks like Pandas or Ray Data while using Minio as an object store. 
-Model training, managed by Ray, supports Keras, TensorFlow, and PyTorch with minor modifications.
-MLflow handles model storage and management, facilitating easy access and updates. 
-Trained models are deployed as inference API endpoints using Ray Serve or as Kubernetes deployments using helm charts and docker containers.
-Flyte orchestrates AI/ML workflows for retraining and redeployment of ML models, enabling retraining triggers based on monitored metrics. 
-Prometheus and Grafana provide system monitoring. 
+The system uses the Ray framework for data processing, model training, and inference, distributing the computational load across nodes.
+Data preparation is done using Pandas or Ray Data, with Minio as an object store.
+Model training supports Keras, TensorFlow, and PyTorch, and is managed by Ray. 
+
+MLflow handles model storage and management, while trained models are deployed as inference API endpoints using Ray Serve or as Kubernetes deployments.
+Flyte orchestrates AI/ML workflows for retraining and redeployment of models, with retraining triggers based on monitored metrics. 
+System monitoring is provided by Prometheus and Grafana. 
 
 Developers register workflows with Flyte and monitor the system, while users can trigger workflows, monitor progress, and access models in MLflow. 
-For example, in a RAN network, the system can enhance and control network operations through periodic metrics collection and automated retraining, ensuring up-to-date AI/ML assisted solutions. 
-This system aims to run autonomously, delivering efficient production AI/ML workflows at the network edge.
-
-The system is modular and can be adjusted to different use cases and requirements by enabling or disabling system components.
+The system is designed to run autonomously, delivering efficient production AI/ML workflows. 
+It is modular and can be adjusted to different use cases and requirements.
 
 ## Deployment
 
@@ -22,19 +20,23 @@ The system is modular and can be adjusted to different use cases and requirement
 - 12 CPU cores
 - 32GB RAM
 
-#### Kubernetes cluster
+#### 1. Kubernetes cluster 
+Skip this step if you already have a kubernetes cluster with required addons.
 - Install microk8s with addons: `dns`, `storage`, `ingress` or run install script `./helper_scripts/system-install.sh`
-- (Optional) Run install script `./helper_scripts/rasp-install.sh` on any raspberry pi node you want to join to the cluster.
 
-#### AI/ML workflow system
-- Deploy with helm, adjust configs in `values_example.yaml`:
+- (Optional) Run install script `./helper_scripts/rasp-install.sh` on any raspberry pi node you want to join to the cluster.
+- (Optional) Ansible playbook for installing microk8s on multiple nodes: `./helper_scripts/microk8s_ansible/` (requires ssh access and ansible)
+
+#### 2. AI/ML workflow system
+- Adjust configs in `values_example.yaml`, then deploy with helm:
 
 ```bash
 helm repo add semr_charts https://copandrej.github.io/Self-Evolving-AIML-Workflow/
 helm install semr semr_charts/SEMR --values values_example.yaml
 ```
 
-#### Environment
+#### 3. Environment
+This step is only required for running example AI/ML workflows.
 - Run config script `./helper_scripts/env-prepare.sh` on VM to install requirements and connect flytectl to the cluster for running AI/ML workflows.
 
 ## Configurations

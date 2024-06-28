@@ -1,3 +1,4 @@
+{{ if index .Values "flyte-binary" "enabled" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -36,3 +37,4 @@ spec:
       nodePort: 31083
   selector:
     app.kubernetes.io/name: flyte-binary
+{{ end }}

@@ -1,5 +1,5 @@
 general:
-  ip: "193.2.205.63"
+  ip: "<CHANGE-ME>"
 
 #################################################
 #
@@ -50,13 +50,18 @@ workerGroups:
           cpu: "1"
           memory: "5G"
 
+kuberay-operator:
+  nodeSelector:
+    kubernetes.io/arch: "amd64"
 
 #################################################
 #
 # MLFlow
 #
+# mlflow is a subchart, for all possible configurations and values refer to: https://github.com/bitnami/charts/tree/main/bitnami/mlflow/
 ################################################
 mlflow:
+  enabled: true
   tracking:
     auth:
       enabled: false
@@ -96,9 +101,11 @@ mlflow:
 #
 # Minio
 #
+# minio is a subchart, for all possible configurations and values refer to: https://artifacthub.io/packages/helm/bitnami/minio
 ################################################
 
 minio:
+  enabled: true
   service:
     type: NodePort
     ports:
@@ -131,9 +138,11 @@ minio:
 #
 # Flyte
 #
+# flyte-binary is a subchart, for all possible configurations and values refer to: https://github.com/flyteorg/flyte/tree/master/charts/flyte-binary
 ################################################
 
 flyte-binary:
+  enabled: true
   configuration:
     database:
       username: postgres
@@ -146,7 +155,7 @@ flyte-binary:
       provider: s3
       providerConfig:
         s3:
-          endpoint: "http://193.2.205.63:30085"
+          endpoint: "http://<CHANGE-ME>:30085"
           region: "us-east-1" #Irrelevant for local but still needed
           authType: "accesskey"
           accessKey: "minio"
@@ -159,7 +168,7 @@ flyte-binary:
         k8s:
           inject-finalizer: true
           default-env-vars:
-            - FLYTE_AWS_ENDPOINT: "http://193.2.205.63:30085"
+            - FLYTE_AWS_ENDPOINT: "http://<CHANGE-ME>:30085"
             - FLYTE_AWS_ACCESS_KEY_ID: "minio"
             - FLYTE_AWS_SECRET_ACCESS_KEY: "miniostorage"
       task_resources:
@@ -184,17 +193,16 @@ flyte-binary:
       nodeSelector:
         kubernetes.io/arch: "amd64"
 
-kuberay-operator:
-  nodeSelector:
-    kubernetes.io/arch: "amd64"
 
 #################################################
 #
 # prometheus-grafana
 #
+# kube-prometheus-stack is a subchart, for all possible configurations and values refer to: https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
 ################################################
 
 kube-prometheus-stack:
+  enabled: false
   grafana:
     grafana.ini:
       security:
