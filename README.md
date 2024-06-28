@@ -53,7 +53,8 @@ All components can be disabled, enabled, and configured in the helm values.
 
 ## Usage
 
-TODO
+After the system is deployed, users can access the components through the following dashboards.
+System should be deployed in a closed network as access to dashboards and APIs is not secured.
 
 #### Dashboards
 - Ray: `http://<node_ip>/ray/`
@@ -62,13 +63,45 @@ TODO
 - Grafana: `http://<node_ip>:30000/`
 - MLflow: `http://<node_ip>:31007/#/models`
 
+Components can be used separately or together to create AI/ML workflows.
+To utilize MLflow model store users can use MLflow API on `http://<node_ip>:31007` (refer to MLflow documentation link: https://www.mlflow.org/docs/latest).
+MinIO object store is accessible with default credentials `minio:miniostorage`.
+Default grafana dashboard credentials are `admin:prom-operator`.
+If required credentials can be changed in the helm values, other components and AI/ML workflow examples have to be updated with new credentials.
+Ray cluster is a distributed computing framework and can be used with Ray API (https://docs.ray.io/en/master/index.html), refer to AI/ML workflow examples for how to send tasks to Ray cluster.
+Flyte orchestrates AI/ML workflows. To create and run workflows refer to AI/ML workflow examples.
+
+
+### AI/ML workflow examples
+
+#### QoE prediction
+TO-DO
+
+#### MNIST
+TO-DO
+
+### Model deployment with SEMR_inference helm charts
+TO-DO
+
 ## Repository structure
 
 `workflow_examples/`
-Examples of full MLOps pipelines
+Examples of full MLOps workflows for QoE prediction and MNIST classification.
 
 `helper_scripts/`
-Install & configure scripts for the system
+Install & configure scripts for kubernetes, distributed clusters and setting up the environment.
+
+`docker_build/`
+Dockerfiles and scripts for building docker images for model deployment (`docker_build/model_deployment/`) and for Ray cluster (`docker_build/ray_image/`).
+If the system is deployed on multi architecture cluster, docker images have to be built for each architecture.
+
+`helm_charts/`
+Helm charts SEMR and SEMR_inference. 
+SEMR is the main system helm chart, SEMR_inference is for model deployment.
+Helm charts repository is hosted on GitHub pages: https://copandrej.github.io/Self-Evolving-AIML-Workflow/
+
+`values_example.yaml`
+Example of helm values file for configuring the system. 
 
 ## System architecture
 
