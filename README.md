@@ -1,9 +1,9 @@
-# Self-Evolving AI/ML Workflow
+# Self-Evolving AI/ML Workflow System
 
 AI/ML workflow solution is an MLOps system designed for deployment on a heterogeneous Kubernetes cluster with ARM and x86 GNU/Linux nodes, simulating distributed edge infrastructure common in RAN (Radio Access Networks), network slices and MEC (Multi-Access Edge Computing) devices.
 
 The system leverages the Ray framework for data processing, model training, and model inference, distributing the computational load on edge and non-edge nodes. 
-Data preparation can done with frameworks like Pandas or Ray Data while using Minio as a object store. 
+Data preparation can be done with frameworks like Pandas or Ray Data while using Minio as an object store. 
 Model training, managed by Ray, supports Keras, TensorFlow, and PyTorch with minor modifications.
 MLflow handles model storage and management, facilitating easy access and updates. 
 Trained models are deployed as inference API endpoints using Ray Serve or as Kubernetes deployments using helm charts and docker containers.
@@ -11,7 +11,7 @@ Flyte orchestrates AI/ML workflows for retraining and redeployment of ML models,
 Prometheus and Grafana provide system monitoring. 
 
 Developers register workflows with Flyte and monitor the system, while users can trigger workflows, monitor progress, and access models in MLflow. 
-For example, in a RAN network, the system can enhance and control network operations through periodic metrics collection and automated retraining, ensuring up-to-date AI/ML solutions. 
+For example, in a RAN network, the system can enhance and control network operations through periodic metrics collection and automated retraining, ensuring up-to-date AI/ML assisted solutions. 
 This system aims to run autonomously, delivering efficient production AI/ML workflows at the network edge.
 
 The system is modular and can be adjusted to different use cases and requirements by enabling or disabling system components.

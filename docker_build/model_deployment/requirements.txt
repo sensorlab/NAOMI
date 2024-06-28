@@ -1,0 +1,11 @@
+# Requirements by model deplyoment template
+fastapi
+uvicorn
+python-multipart
+mlflow==2.10.2
+
+# Add your own dependencies for model inference and data preprocessing
+# numpy
+# torch
+# torch_geometric
+# torchvision
