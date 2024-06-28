@@ -1,0 +1,21 @@
+- name: Leave cluster
+  hosts: worker_nodes
+  become: true
+  tasks:
+    - name: Leave MicroK8s cluster
+      command: snap run microk8s leave
+      ignore_errors: yes
+
+- name: Uninstall MicroK8s from worker nodes
+  hosts: all
+  become: true
+  tasks:
+    - name: Reset MicroK8s
+      command: snap run microk8s reset
+      ignore_errors: yes
+
+    - name: Uninstall MicroK8s via Snap
+      command: snap remove --purge microk8s
+
+    - name: Reset connection
+      meta: reset_connection

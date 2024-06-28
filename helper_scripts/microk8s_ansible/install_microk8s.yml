@@ -1,0 +1,85 @@
+- name: Install MicroK8s on all nodes
+  hosts: all
+  become: true
+  tasks:
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - snapd
+
+    - name: Install MicroK8s via Snap
+      community.general.snap:
+        classic: true
+        channel: "{{ microk8s }}"
+        name:
+          - microk8s
+
+    - name: Adding user to group
+      user:
+        name: "{{ username }}"
+        groups: microk8s
+        append: yes
+
+    - name: Reset connection
+      meta: reset_connection
+
+    - name: Change kube folder ownership
+      file:
+        path: /home/{{ username }}/.kube
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        state: directory
+
+    - name: Wait ready
+      command: snap run microk8s status --wait-ready
+
+    - name: Force disable HA which sets flannel as CNI and etcd as db
+      command: snap run microk8s disable ha-cluster --force
+      ignore_errors: yes
+
+- name: Join worker nodes
+  hosts: worker_nodes
+  become: true
+  tasks:
+    - name: Retrieve join token
+      command: snap run microk8s add-node --format short
+      register: join_token_output
+      delegate_to: "{{ groups['head_nodes'][0] }}"
+
+    - name: Set join token as fact
+      set_fact:
+        join_token: "{{ join_token_output.stdout.split('\n')[0] }}"
+
+    - name: Join MicroK8s cluster
+      command: snap run {{ join_token }} --worker
+
+- name: Enable required MicroK8s addons on head node
+  hosts: head_nodes
+  become: true
+  tasks:
+    - name: Enable required addons
+      command: snap run microk8s enable {{ item }}
+      with_items: "{{ addons }}"
+
+    - name: Reset connection
+      meta: reset_connection
+
+    - name: wait ready all pods
+      shell: kubectl wait --for=condition=ready pod --all -A --timeout=10000s
+
+
+- name: Fetch kubeconfig from head node
+  hosts: head_nodes
+  become: true
+  tasks:
+    - name: Run MicroK8s config command
+      ansible.builtin.shell: | # This is a fix for incorrect config file which is generated if not run as user
+        su - {{ username }} -c 'snap run microk8s config > /home/{{ username }}/.kube/config' 
+
+    - name: Fetch kubeconfig
+      ansible.builtin.fetch:
+        src: /home/{{ username }}/.kube/config
+        dest: "./kubeconfig"
+        flat: yes
