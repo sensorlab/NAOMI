@@ -66,5 +66,5 @@ def populatedb(N):
 
 # Call the function with the desired multiplier
 populatedb(1)
-# populatedb(10)
-# populatedb(100)
+populatedb(10)
+populatedb(100)

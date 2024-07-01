@@ -77,13 +77,44 @@ Flyte orchestrates AI/ML workflows. To create and run workflows refer to AI/ML w
 ### AI/ML workflow examples
 
 #### QoE prediction
-TO-DO
+
+Workflow example in `workflow_examples/qoe_prediction/`.
+
+Quality of Experience (QoE) prediction is a workflow example adjusted from O-RAN SC AI/ML Framework use case https://docs.o-ran-sc.org/en/latest/projects.html#ai-ml-framework.
+
+1. Populate MinIO with file `insert.py` in `workflow_examples/qoe_prediction/populate_minio/` (Change IP endpoint of MinIO in the script).
+2. Change IP addresses for Ray, MinIO and MLflow in all task files in `workflow_examples/qoe_prediction/*`
+3. Run the workflow with Flyte CLI; --bt_s is batch size, --n is dataset size (1, 10, 100):
+    ```bash
+    pyflyte run --remote --image  copandrej/flyte_workflow:1 wf.py qoe_train --bt_s 10 --n 1
+    ```
+4. Monitor the progress on dashboards.
 
 #### MNIST
 TO-DO
 
 ### Model deployment with SEMR_inference helm charts
-TO-DO
+This is a separate use case for deploying ML models as a service using SEMR_inference helm charts for models stored in MLflow. If using example AI/ML workflows, models are served as API endpoints using Ray Serve.
+- Trained models are stored using MLFlow API.
+
+```python
+import mlflow
+
+# SEMR's model store endpoint
+os.environ['MLFLOW_TRACKING_URI'] = 'http://<System_IP>:31007'
+
+# Log trained ML model to SEMR
+mlflow.pytorch.log_model(model, "CNN_spectrum", registered_model_name="CNN_spectrum")
+```
+
+- Model inference service have to be containerized.
+	- Docker image template has to be modified with code for model inference `docker_build/model_deployment/api-endpoint.py`.
+	- Requirements for model inference have to be appended to requirements.txt and imported `docker_build/model_deployment/requirements.txt`.
+	- Docker image has to be built and pushed to docker registry.
+
+- ML Models as a Service can be instantiated and configured using helm values overrides, specifying model version, docker image, service port, number of replicas, and other configurations required by the service `helm_charts/SEMR_inference/values-overrides-*.yaml`.
+
+- When a new model version is uploaded to MLflow, inference service can be re-instantiated using new configurations (values overrides). Docker images don't require any additional modification when models are retrained.
 
 ## Repository structure
 
