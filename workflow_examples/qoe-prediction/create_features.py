@@ -1,35 +1,37 @@
 from flytekit import task, PodTemplate
 import numpy as np
-from typing import Tuple, Annotated, List, Any
 from kubernetes.client import V1ResourceRequirements, V1Container, V1PodSpec
-from flytekit import kwtypes
 import s3fs
 import pandas as pd
-from numpy import ndarray, dtype
 
 
-@task(pod_template=PodTemplate(
-    pod_spec=V1PodSpec(
-        node_selector={
-            "kubernetes.io/arch": "amd64"
-        },
-        containers=[
-            V1Container(
-                name="primary",
-                resources=V1ResourceRequirements(
-                    limits={
-                        "memory": "2Gi",
-                        "cpu": "1000m"
-                    },
-                    requests={
-                        "memory": "1Gi"
-                    }
+# This function is used by all other tasks in a workflow.
+def get_pod_template():
+    return PodTemplate(
+        pod_spec=V1PodSpec(
+            node_selector={
+                "kubernetes.io/arch": "amd64"
+            },
+            containers=[
+                V1Container(
+                    name="primary",
+                    resources=V1ResourceRequirements(
+                        limits={
+                            "memory": "2Gi",
+                            "cpu": "1000m"
+                        },
+                        requests={
+                            "memory": "1Gi"
+                        }
+                    ),
                 ),
-            ),
-        ],
+            ],
+        )
     )
-)
-)
+
+
+
+@task(pod_template=get_pod_template())
 def fetch_data_pd(N: int) -> str:
 
     # Create an S3 filesystem object

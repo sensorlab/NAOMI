@@ -1,31 +1,11 @@
 import logging
 import requests
-from flytekit import task, PodTemplate
-from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
+from flytekit import task
 
 
-@task(pod_template=PodTemplate(
-    pod_spec=V1PodSpec(
-        node_selector={
-            "kubernetes.io/arch": "amd64"
-        },
-        containers=[
-            V1Container(
-                name="primary",
-                resources=V1ResourceRequirements(
-                    limits={
-                        "memory": "2Gi",
-                        "cpu": "1000m"
-                    },
-                    requests={
-                        "memory": "1Gi"
-                    }
-                ),
-            ),
-        ],
-    )
-)
-)
+from .create_features import get_pod_template
+
+@task(pod_template=get_pod_template())
 def test_deploy() -> None:
     data = {
         "signature_name": "serving_default",

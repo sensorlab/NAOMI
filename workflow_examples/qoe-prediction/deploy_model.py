@@ -1,33 +1,13 @@
 import numpy as np
-from flytekit import task, PodTemplate
+from flytekit import task
 import keras
 import ray
-from kubernetes.client import V1PodSpec, V1ResourceRequirements, V1Container
 from ray import serve
 from fastapi import FastAPI, HTTPException
 
-@task(pod_template=PodTemplate(
-    pod_spec=V1PodSpec(
-        node_selector={
-            "kubernetes.io/arch": "amd64"
-        },
-        containers=[
-            V1Container(
-                name="primary",
-                resources=V1ResourceRequirements(
-                    limits={
-                        "memory": "2Gi",
-                        "cpu": "1000m"
-                    },
-                    requests={
-                        "memory": "1Gi"
-                    }
-                ),
-            ),
-        ],
-    )
-)
-)
+from .create_features import get_pod_template
+
+@task(pod_template=get_pod_template())
 def deploy(model: keras.Sequential, num_replicas: int) -> None:
     app = FastAPI(debug=True)
 

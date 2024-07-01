@@ -1,6 +1,4 @@
-from typing import List
-from flytekit import task, PodTemplate
-from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
+from flytekit import task
 import mlflow
 import mlflow.keras
 import ray
@@ -17,28 +15,9 @@ import numpy as np
 import os
 import pandas as pd
 
-@task(pod_template=PodTemplate(
-    pod_spec=V1PodSpec(
-        node_selector={
-            "kubernetes.io/arch": "amd64"
-        },
-        containers=[
-            V1Container(
-                name="primary",
-                resources=V1ResourceRequirements(
-                    limits={
-                        "memory": "2Gi",
-                        "cpu": "1000m"
-                    },
-                    requests={
-                        "memory": "1Gi"
-                    }
-                ),
-            ),
-        ],
-    )
-)
-)
+from .create_features import get_pod_template
+
+@task(pod_template=get_pod_template())
 def train(data_url: str, epochs: int = 1, batch_size: int = 10) -> Sequential:
     def build_model() -> tf.keras.Model:
         model = Sequential()

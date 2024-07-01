@@ -1,46 +1,22 @@
-from flytekit import task, PodTemplate
-from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
+from flytekit import task
 import mlflow
 import mlflow.keras
 import ray
 import keras
-import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import LSTM
 import numpy as np
 import s3fs
-from numpy import ndarray, dtype
-from typing_extensions import Any
 
 print("numpy version")
 print(np.__version__)
 import pandas as pd
 
 
+from .create_features import get_pod_template
 
-@task(pod_template=PodTemplate(
-    pod_spec=V1PodSpec(
-        node_selector={
-            "kubernetes.io/arch": "amd64"
-        },
-        containers=[
-            V1Container(
-                name="primary",
-                resources=V1ResourceRequirements(
-                    limits={
-                        "memory": "2Gi",
-                        "cpu": "1000m"
-                    },
-                    requests={
-                        "memory": "1Gi"
-                    }
-                ),
-            ),
-        ],
-    )
-)
-)
+@task(pod_template=get_pod_template())
 def train(data_url: str, epochs: int = 1, batch_size: int = 10) -> keras.Sequential:
 
     @ray.remote(resources={"vm": 1}, num_cpus=1)
