@@ -2,10 +2,9 @@ import pandas as pd
 import datetime
 from minio import Minio
 from io import StringIO, BytesIO
-import gzip
 
-# Placeholder credentials for MinIO
-MINIO_ENDPOINT = '193.2.205.63:30085'
+# credentials for MinIO
+MINIO_ENDPOINT = '<CHANGE-ME>:30085'
 MINIO_ACCESS_KEY = 'minio'
 MINIO_SECRET_KEY = 'miniostorage'
 MINIO_BUCKET_NAME = 'raybuck'

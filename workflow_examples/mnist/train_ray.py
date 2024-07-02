@@ -17,28 +17,12 @@ import numpy as np
 import os
 
 
-@task(pod_template=PodTemplate(
-    pod_spec=V1PodSpec(
-        node_selector={
-            "kubernetes.io/arch": "amd64"
-        },
-        containers=[
-            V1Container(
-                name="primary",
-                resources=V1ResourceRequirements(
-                    limits={
-                        "memory": "2Gi",
-                        "cpu": "1000m"
-                    },
-                    requests={
-                        "memory": "1Gi"
-                    }
-                ),
-            ),
-        ],
-    )
-)
-)
+from .fetch import get_pod_template
+
+# Get system ip from container environment variable set with pyflyte --env SYSTEM_IP=xxx
+SYSTEM_IP = os.environ.get('SYSTEM_IP')
+
+@task(pod_template=get_pod_template())
 def train(train_ds: List[any]) -> keras.Sequential:
     def build_model() -> tf.keras.Model:
         model = keras.Sequential(
@@ -84,12 +68,12 @@ def train(train_ds: List[any]) -> keras.Sequential:
             results.append(history.history)
         return results
 
-    ray.init(address="ray://193.2.205.27:30001", ignore_reinit_error=True)
+    ray.init(address=f"ray://{SYSTEM_IP}:30001", ignore_reinit_error=True)
 
     s3_fs = s3fs.S3FileSystem(
         key='minio',
         secret='miniostorage',
-        endpoint_url='http://193.2.205.27:30085',
+        endpoint_url=f'http://{SYSTEM_IP}:30085',
         use_ssl="False"
     )
 
@@ -112,7 +96,7 @@ def train(train_ds: List[any]) -> keras.Sequential:
     print(result.metrics)
     checkpoint = result.checkpoint
 
-    mlflow.set_tracking_uri("http://193.2.205.27:31007")
+    mlflow.set_tracking_uri(f"http://{SYSTEM_IP}:31007")
     with checkpoint.as_directory() as checkpoint_dir:
         model: keras.Sequential = tf.keras.models.load_model(
             os.path.join(checkpoint_dir, "model.keras")

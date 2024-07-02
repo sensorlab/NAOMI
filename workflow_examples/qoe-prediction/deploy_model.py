@@ -4,8 +4,12 @@ import keras
 import ray
 from ray import serve
 from fastapi import FastAPI, HTTPException
+import os
 
 from .create_features import get_pod_template
+
+# Get system ip from container environment variable set with pyflyte --env SYSTEM_IP=xxx
+SYSTEM_IP = os.environ.get('SYSTEM_IP')
 
 @task(pod_template=get_pod_template())
 def deploy(model: keras.Sequential, num_replicas: int) -> None:
@@ -42,6 +46,6 @@ def deploy(model: keras.Sequential, num_replicas: int) -> None:
         def get(self):
             return "Welcome to the model server."
 
-    ray.init(address="ray://193.2.205.63:30001", ignore_reinit_error=True)
+    ray.init(address=f"ray://{SYSTEM_IP}:30001", ignore_reinit_error=True)
     serve.run(Qoe.bind(), name="qoe_prediction", route_prefix="/qoe")
     serve.delete("Test")  # placeholder removal

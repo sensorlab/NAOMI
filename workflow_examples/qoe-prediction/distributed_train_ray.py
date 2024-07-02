@@ -17,6 +17,9 @@ import pandas as pd
 
 from .create_features import get_pod_template
 
+# Get system ip from container environment variable set with pyflyte --env SYSTEM_IP=xxx
+SYSTEM_IP = os.environ.get('SYSTEM_IP')
+
 @task(pod_template=get_pod_template())
 def train(data_url: str, epochs: int = 1, batch_size: int = 10) -> Sequential:
     def build_model() -> tf.keras.Model:
@@ -49,12 +52,12 @@ def train(data_url: str, epochs: int = 1, batch_size: int = 10) -> Sequential:
 
     tf.config.threading.set_inter_op_parallelism_threads(4)
 
-    ray.init(address="ray://193.2.205.63:30001", ignore_reinit_error=True)
+    ray.init(address=f"ray://{SYSTEM_IP}:30001", ignore_reinit_error=True)
 
     s3_fs = s3fs.S3FileSystem(
         key='minio',
         secret='miniostorage',
-        endpoint_url='http://193.2.205.63:30085',
+        endpoint_url=f'http://{SYSTEM_IP}:30085',
         use_ssl="False"
     )
 
@@ -88,7 +91,7 @@ def train(data_url: str, epochs: int = 1, batch_size: int = 10) -> Sequential:
     print(result.metrics)
     checkpoint = result.checkpoint
 
-    mlflow.set_tracking_uri("http://193.2.205.63:31007")
+    mlflow.set_tracking_uri(f"http://{SYSTEM_IP}:31007")
     with checkpoint.as_directory() as checkpoint_dir:
         model: Sequential = tf.keras.models.load_model(
             os.path.join(checkpoint_dir, "model.keras")

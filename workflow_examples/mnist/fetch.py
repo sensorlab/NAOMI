@@ -12,28 +12,33 @@ import os
 import s3fs
 import pyarrow.fs
 
-@task(pod_template=PodTemplate(
-    pod_spec=V1PodSpec(
-        node_selector={
-            "kubernetes.io/arch": "amd64"
-        },
-        containers=[
-            V1Container(
-                name="primary",
-                resources=V1ResourceRequirements(
-                    limits={
-                        "memory": "2Gi",
-                        "cpu": "1000m"
-                    },
-                    requests={
-                        "memory": "1Gi"
-                    }
+# Get system ip from container environment variable set with pyflyte --env SYSTEM_IP=xxx
+SYSTEM_IP = os.environ.get('SYSTEM_IP')
+
+def get_pod_template():
+    return PodTemplate(
+        pod_spec=V1PodSpec(
+            node_selector={
+                "kubernetes.io/arch": "amd64"
+            },
+            containers=[
+                V1Container(
+                    name="primary",
+                    resources=V1ResourceRequirements(
+                        limits={
+                            "memory": "2Gi",
+                            "cpu": "1000m"
+                        },
+                        requests={
+                            "memory": "1Gi"
+                        }
+                    ),
                 ),
-            ),
-        ],
+            ],
+        )
     )
-)
-)
+
+@task(pod_template=get_pod_template())
 def fetch_data() -> Tuple[
         Annotated[List[any], kwtypes(y_train=str)],
         Annotated[List[any], kwtypes(x_test=str)],
@@ -42,11 +47,11 @@ def fetch_data() -> Tuple[
     s3_fs = s3fs.S3FileSystem(
         key='minio',
         secret='miniostorage',
-        endpoint_url='http://193.2.205.27:30085',
+        endpoint_url=f'http://{SYSTEM_IP}:30085',
         use_ssl="False"
     )
     custom_fs = pyarrow.fs.PyFileSystem(pyarrow.fs.FSSpecHandler(s3_fs))
-    ray.init(address="ray://193.2.205.27:30001", ignore_reinit_error=True)
+    ray.init(address=f"ray://{SYSTEM_IP}:30001", ignore_reinit_error=True)
 
     @ray.remote
     def data_load(custom_fs):

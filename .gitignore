@@ -15,4 +15,5 @@ nohup.out
 results/
 dep_t_tester.bash
 *.tgz
+MNIST_dataset/
 

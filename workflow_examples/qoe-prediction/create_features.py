@@ -3,7 +3,7 @@ import numpy as np
 from kubernetes.client import V1ResourceRequirements, V1Container, V1PodSpec
 import s3fs
 import pandas as pd
-
+import os
 
 # This function is used by all other tasks in a workflow.
 def get_pod_template():
@@ -29,6 +29,8 @@ def get_pod_template():
         )
     )
 
+# Get system ip from container environment variable set with pyflyte --env SYSTEM_IP=xxx
+SYSTEM_IP = os.environ.get('SYSTEM_IP')
 
 
 @task(pod_template=get_pod_template())
@@ -38,7 +40,7 @@ def fetch_data_pd(N: int) -> str:
     s3_fs = s3fs.S3FileSystem(
         key='minio',
         secret='miniostorage',
-        endpoint_url='http://193.2.205.63:30085',
+        endpoint_url=f'http://{SYSTEM_IP}:30085',
         use_ssl=False  # Note: use_ssl should be False if your MinIO server is not using HTTPS
     )
 
