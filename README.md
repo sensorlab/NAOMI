@@ -1,6 +1,6 @@
-# Self-Evolving AI/ML Workflow System
+# NAOMI: Network AI Workflow Democratization
 
-The Self-Evolving AI/ML Workflow System is a production MLOps solution designed for deployment on a heterogeneous Kubernetes cluster.
+NAOMI is a production MLOps solution designed for deployment on a heterogeneous Kubernetes cluster.
 
 The system uses the Ray framework for data processing, model training, and inference, distributing the computational load across nodes.
 Data preparation is done using Pandas or Ray Data, with Minio as an object store.
