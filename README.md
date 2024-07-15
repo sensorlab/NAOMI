@@ -31,7 +31,7 @@ Skip this step if you already have a kubernetes cluster with required addons.
 - Adjust configs in `values_example.yaml`, then deploy with helm:
 
 ```bash
-helm repo add semr_charts https://copandrej.github.io/Self-Evolving-AIML-Workflow/
+helm repo add semr_charts https://copandrej.github.io/NAOMI/
 helm install semr semr_charts/SEMR --values values_example.yaml
 ```
 
@@ -140,7 +140,7 @@ If the system is deployed on multi architecture cluster, docker images have to b
 `helm_charts/`
 Helm charts SEMR and SEMR_inference. 
 SEMR is the main system helm chart, SEMR_inference is for model deployment.
-Helm charts repository is hosted on GitHub pages: https://copandrej.github.io/Self-Evolving-AIML-Workflow/
+Helm charts repository is hosted on GitHub pages: https://copandrej.github.io/NAOMI/
 
 `values_example.yaml`
 Example of helm values file for configuring the system. 
