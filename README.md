@@ -154,3 +154,19 @@ Example of helm values file for configuring the system.
 ![arch](fig/actor_workflow_diag.png)
 
 ![arch](fig/all_actors_workflow_diag.png)
+
+## Citation
+
+Please cite our [paper](https://arxiv.org/abs/2407.11905) as follows:
+
+```
+@misc{cop2024overview,
+    title={An Overview and Solution for Democratizing AI Workflows at the Network Edge},
+    author={Andrej Čop and Blaž Bertalanič and Carolina Fortuna},
+    year={2024},
+    eprint={2407.11905},
+    archivePrefix={arXiv},
+    primaryClass={cs.NI}
+}
+```
+
