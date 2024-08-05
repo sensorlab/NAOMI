@@ -155,6 +155,11 @@ Example of helm values file for configuring the system.
 
 ![arch](fig/all_actors_workflow_diag.png)
 
+## License
+
+This project is licensed under the [BSD-3 Clause License](LICENSE) - see the LICENSE file for details.
+
+
 ## Citation
 
 Please cite our [paper](https://arxiv.org/abs/2407.11905) as follows:
@@ -169,4 +174,9 @@ Please cite our [paper](https://arxiv.org/abs/2407.11905) as follows:
     primaryClass={cs.NI}
 }
 ```
+
+
+## Acknowledgment
+
+The authors would like to acknowledge funding from the European Union's Horizon Europe Framework Programme [NANCY](https://nancy-project.eu/) project under Grant Agreement No. 101096456.
 
