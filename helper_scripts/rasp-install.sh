@@ -7,7 +7,7 @@ fi
 
 # install microk8s
 sudo apt update && sudo apt upgrade -y && sudo apt install snapd -y &&
-sudo snap install microk8s --classic --channel=1.30/stable &&
+sudo snap install microk8s --classic --channel=1.31/stable &&
 sleep 10
 sudo usermod -a -G microk8s $USER &&
 sudo chown -f -R $USER ~/.kube &&

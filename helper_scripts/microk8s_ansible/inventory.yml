@@ -1,6 +1,6 @@
 all:
   vars:
-    microk8s: "1.30/stable"
+    microk8s: "1.31/stable"
     addons:
       - dns
       - storage
