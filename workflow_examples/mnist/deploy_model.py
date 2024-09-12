@@ -18,7 +18,7 @@ SYSTEM_IP = os.environ.get('SYSTEM_IP')
 def deploy(model: keras.Sequential, num_replicas: int) -> None:
     app = FastAPI(debug=True)
 
-    @serve.deployment(name="mnist", num_replicas=num_replicas, ray_actor_options={"num_cpus": 0, "num_gpus": 0}, max_concurrent_queries=100000) # , "resources": {"rasp":0.25}
+    @serve.deployment(name="mnist", num_replicas=num_replicas, ray_actor_options={"num_cpus": 0, "num_gpus": 0}) # , "resources": {"rasp":0.25}
     @serve.ingress(app)
     class Hello:
         def __init__(self):

@@ -17,7 +17,7 @@ spec:
             ray_actor_options:
               num_cpus: 0
   rayClusterConfig:
-    rayVersion: '2.10.0' # Should match the Ray version in the image of the containers
+    rayVersion: "{{ .Values.rayVersion }}" # Should match the Ray version in the image of the containers
     #############auto scaler copied from https://github.com/ray-project/kuberay/blob/5b1a5a11f5df76db2d66ed332ff0802dc3bbff76/ray-operator/config/samples/ray-cluster.autoscaler.yaml ############################
     enableInTreeAutoscaling: false
 

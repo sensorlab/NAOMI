@@ -17,7 +17,6 @@ def deploy(model: keras.Sequential, num_replicas: int) -> None:
 
     @serve.deployment(name="qoe_prediction", num_replicas="auto",
                       ray_actor_options={"num_cpus": 0, "num_gpus": 0, "memory": 0},
-                      max_concurrent_queries=1000,
                       autoscaling_config={"min_replicas": 1, "max_replicas": 1})  # , "resources": {"rasp":0.25}
     @serve.ingress(app)
     class Qoe:

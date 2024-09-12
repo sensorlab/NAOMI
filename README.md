@@ -31,9 +31,11 @@ Skip this step if you already have a kubernetes cluster with required addons.
 - Adjust configs in `values_example.yaml`, then deploy with helm:
 
 ```bash
-helm repo add semr_charts https://copandrej.github.io/NAOMI/
-helm install semr semr_charts/SEMR --values values_example.yaml
+helm repo add naomi_charts https://copandrej.github.io/NAOMI/
+helm install naom naomi_charts/NAOMI --version 0.1.0 --values values_example.yaml
 ```
+
+> The app name 'naom' should not be longer than 4 characters, due to limitations in k8s service name length.
 
 #### 3. Environment
 This step is only required for running example AI/ML workflows.
@@ -85,8 +87,8 @@ Quality of Experience (QoE) prediction is a workflow example adjusted from O-RAN
 1. Populate MinIO with file `insert.py` in `workflow_examples/qoe_prediction/populate_minio/` (Change IP endpoint of MinIO in the script).
 2. Run the workflow with Flyte CLI; --bt_s is batch size, --n is dataset size (1, 10, 100):
     ```bash
-    pyflyte run --remote --image  copandrej/flyte_workflow:1 wf.py qoe_train --bt_s 10 --n 1
-    ```
+   pyflyte run --remote --env SYSTEM_IP=$(hostname -I | awk '{print $1}') --image copandrej/flyte_workflow:2 wf.py qoe_train --bt_s 10 --n 1
+   ```
 3. Monitor the progress on dashboards.
 
 #### MNIST
@@ -96,7 +98,8 @@ A workflow example for distributed data processing, distributed model training, 
 1. Populate MinIO with file `populate.py` in `workflow_examples/mnist/populate_minio/` (Change IP endpoint of MinIO in the script).
 2. Run the workflow with Flyte CLI from `workflow_examples/mnist/` directory:
     ```bash
-    pyflyte run --remote --env SYSTEM_IP=<CHANGE-ME> --image copandrej/flyte_workflow:1 wf.py mnist_train
+    pyflyte run --remote --env SYSTEM_IP=$(hostname -I | awk '{print $1}') --image copandrej/flyte_workflow:2 wf.py mnist_train
+
     ```
 3. Monitor the progress on dashboards.
 

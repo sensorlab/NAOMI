@@ -5,6 +5,7 @@ general:
 
 # Ray
 # Ray can't be disabled currently
+rayVersion: "2.35.0"
 headGroupSpecs:
   rayHead:
     resources:
@@ -65,3 +66,7 @@ flyte-binary:
 # promethes&grafana
 kube-prometheus-stack:
   enabled: true
+  grafana:
+    grafana.ini:
+      auth.anonymous:
+        enabled: true
