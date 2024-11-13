@@ -1,0 +1,90 @@
+# For all values refer to 'helm_charts/SEMR/values.yaml'
+# Change <CHANGE-ME> to IP of machine running the k8s cluster
+general:
+  ip: "<CHANGE-ME>"
+
+# Ray
+rayVersion: "2.35.0"
+headGroupSpecs:
+  rayHead:
+    resources:
+      limits:
+        cpu: "2"
+        memory: "6G"
+      requests:
+        cpu: "2"
+        memory: "6G"
+
+# x86 group of Ray workers
+workerGroups:
+  amdGroup:
+    replicas: 3
+    minReplicas: 3
+    maxReplicas: 3
+    rayStartParams:
+      numCpus: "2"
+    container:
+      resources:
+        limits:
+          cpu: "2"
+          memory: "5G"
+        requests:
+          cpu: "2"
+          memory: "5G"
+      ports:
+        - 9900
+      nodePorts:
+        - 30070
+
+# # This is arm RPI group, if you have RPI nodes in your cluster; Define ports only in one of the worker groups
+#  aarchGroup:
+#    replicas: 2
+#    minReplicas: 2
+#    maxReplicas: 2
+#    rayStartParams:
+#      numCpus: "1"
+#    container:
+#      image: copandrej/ijs-custom:ray-aarch64-ray235
+#      resources:
+#        limits:
+#          cpu: "1"
+#          memory: "5G"
+#        requests:
+#          cpu: "1"
+#          memory: "5G"
+#      ports:
+#        - 9900
+#      nodePorts:
+#        - 30070
+
+# MLflow is not needed for running MADRL examples
+mlflow:
+  enabled: false
+
+# MinIO
+# MinIO is required by Flyte, Mlflow and RLlib
+minio:
+  enabled: true
+  # changing credentials will require fixes in other components and workflow examples!
+  auth:
+    rootUser: "minio"
+    rootPassword: "miniostorage"
+  resources:
+    requests:
+      cpu: 2
+      memory: 2048Mi
+    limits:
+      cpu: 4
+      memory: 4096Mi
+
+# Flyte is not needed for running MADRL examples
+flyte-binary:
+  enabled: false
+
+# promethes&grafana, optional for monitoring
+kube-prometheus-stack:
+  enabled: true
+  grafana:
+    grafana.ini:
+      auth.anonymous:
+        enabled: true

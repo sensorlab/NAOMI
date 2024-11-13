@@ -3,7 +3,6 @@ kind: RayService
 metadata:
   name: ray-serve
 spec:
-  # this is example serving config, here we need to put some placeholder text return serving
   serveConfigV2: |
     applications:
       - name: Test
@@ -17,17 +16,13 @@ spec:
             ray_actor_options:
               num_cpus: 0
   rayClusterConfig:
-    rayVersion: "{{ .Values.rayVersion }}" # Should match the Ray version in the image of the containers
-    #############auto scaler copied from https://github.com/ray-project/kuberay/blob/5b1a5a11f5df76db2d66ed332ff0802dc3bbff76/ray-operator/config/samples/ray-cluster.autoscaler.yaml ############################
+    rayVersion: "{{ .Values.rayVersion }}"
     enableInTreeAutoscaling: false
 
-    ######################headGroupSpecs#################################
-    # Ray head pod template.
     headGroupSpec:
       rayStartParams:
         dashboard-host: '0.0.0.0'
-        num-cpus: "0" # we don't want training and serving to get scheduled on head
-      # Pod template
+        num-cpus: "0"
       template:
         spec:
           containers:
@@ -88,6 +83,10 @@ spec:
                   requests:
                     cpu: "{{ .Values.workerGroups.amdGroup.container.resources.requests.cpu }}"
                     memory: "{{ .Values.workerGroups.amdGroup.container.resources.requests.memory }}"
+                ports:
+                  {{- range .Values.workerGroups.amdGroup.container.ports }}
+                    - containerPort: {{ . }}
+                  {{- end }}
             nodeSelector:
               kubernetes.io/arch: "amd64"
 
@@ -110,5 +109,9 @@ spec:
                   requests:
                     cpu: "{{ .Values.workerGroups.aarchGroup.container.resources.requests.cpu }}"
                     memory: "{{ .Values.workerGroups.aarchGroup.container.resources.requests.memory }}"
+                ports:
+                  {{- range .Values.workerGroups.aarchGroup.container.ports }}
+                  - containerPort: {{ . }}
+                  {{- end }}
             nodeSelector:
               kubernetes.io/arch: "arm64"
