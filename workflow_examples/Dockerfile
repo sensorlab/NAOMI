@@ -15,7 +15,12 @@ ENV PATH="${VENV}/bin:$PATH"
 
 # Install Python dependencies
 COPY requirements.txt /root
+RUN python -m pip install --upgrade pip
 RUN pip install -r /root/requirements.txt
+
+# installing mltk here, as it doesn't resolve dependencies properly when installed from requirements.txt
+# This is needed for TinyML example workflows
+RUN pip install silabs-mltk[full]==0.19.0
 
 # Copy the actual code
 COPY . /root
