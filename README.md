@@ -27,6 +27,8 @@ Skip this step if you already have a kubernetes cluster with required addons.
 - (Optional) Run install script `./helper_scripts/rasp-install.sh` on any raspberry pi node you want to join to the cluster.
 - (Optional) Ansible playbook for installing microk8s on multiple nodes: `./helper_scripts/microk8s_ansible/` (requires ssh access and ansible)
 
+**NAOMI can also be deployed on k3s**. In this case run install script `./helper_scripts/NAOMI-on-k3s.sh`, which adjusts k3s configurations to be compatible with NAOMI. 
+
 #### 2. AI/ML workflow system
 - Adjust configs in `values_example.yaml`, then deploy with helm:
 

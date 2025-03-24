@@ -6,7 +6,9 @@ set -e
 REGISTRY="localhost:32000"
 
 # SET the appname here
-PROJECT_NAME="mnist"
+PROJECT_NAME="flyte_workflow"
+
+VERSION="5"
 
 while getopts a:r:v:h flag
 do

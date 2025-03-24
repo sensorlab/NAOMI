@@ -23,15 +23,15 @@ workerGroups:
     minReplicas: 1
     maxReplicas: 1
     rayStartParams:
-      numCpus: "2"
+      numCpus: "4"
     container:
       resources:
         limits:
-          cpu: "2"
-          memory: "4G"
+          cpu: "4"
+          memory: "6G"
         requests:
-          cpu: "2"
-          memory: "4G"
+          cpu: "4"
+          memory: "6G"
 
 # MLflow
 mlflow:
@@ -61,6 +61,12 @@ flyte-binary:
             - FLYTE_AWS_ENDPOINT: "http://<CHANGE-ME>:30085"
             - FLYTE_AWS_ACCESS_KEY_ID: "minio"
             - FLYTE_AWS_SECRET_ACCESS_KEY: "miniostorage"
+      task_resources: #adjust this for max flyte task pod resources (this is ceiling for task res. that you specify in example workflows)
+        defaults:
+          cpu: 2000m
+          memory: 4Gi
+        limits:
+          memory: 4Gi
 
 
 # promethes&grafana
