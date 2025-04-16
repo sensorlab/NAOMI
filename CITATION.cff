@@ -1,24 +1,28 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 authors:
-- family-names: "Čop"
-  given-names: "Andrej"
-- family-names: "Bertalanič"
-  given-names: "Blaž"
-- family-names: "Fortuna"
-  given-names: "Carolina"
-title: "An Overview and Solution for Democratizing AI Workflows at the Network Edge"
-url: "https://arxiv.org/abs/2407.11905"
-preferred-citation:
-  type: article
-  authors:
   - family-names: "Čop"
     given-names: "Andrej"
   - family-names: "Bertalanič"
     given-names: "Blaž"
   - family-names: "Fortuna"
     given-names: "Carolina"
-  doi: "10.48550/arXiv.2407.11905"
-  url: "https://arxiv.org/abs/2407.11905"
-  title: "An Overview and Solution for Democratizing AI Workflows at the Network Edge"
-  year: 2024
+title: "An Overview and Solution for Democratizing AI Workflows at the Network Edge"
+url: "https://www.sciencedirect.com/science/article/pii/S1084804525000773"
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Čop"
+      given-names: "Andrej"
+    - family-names: "Bertalanič"
+      given-names: "Blaž"
+    - family-names: "Fortuna"
+      given-names: "Carolina"
+  title: "An overview and solution for democratizing AI workflows at the network edge"
+  journal: "Journal of Network and Computer Applications"
+  volume: "239"
+  pages: "104180"
+  year: 2025
+  issn: "1084-8045"
+  doi: "10.1016/j.jnca.2025.104180"
+  url: "https://www.sciencedirect.com/science/article/pii/S1084804525000773"
