@@ -167,16 +167,19 @@ This project is licensed under the [BSD-3 Clause License](LICENSE) - see the LIC
 
 ## Citation
 
-Please cite our [paper](https://arxiv.org/abs/2407.11905) as follows:
+Please cite our [paper](https://www.sciencedirect.com/science/article/pii/S1084804525000773) as follows:
 
 ```
-@misc{cop2024overview,
-    title={An Overview and Solution for Democratizing AI Workflows at the Network Edge},
-    author={Andrej Čop and Blaž Bertalanič and Carolina Fortuna},
-    year={2024},
-    eprint={2407.11905},
-    archivePrefix={arXiv},
-    primaryClass={cs.NI}
+@article{COP2025104180,
+title = {An overview and solution for democratizing AI workflows at the network edge},
+journal = {Journal of Network and Computer Applications},
+volume = {239},
+pages = {104180},
+year = {2025},
+issn = {1084-8045},
+doi = {https://doi.org/10.1016/j.jnca.2025.104180},
+url = {https://www.sciencedirect.com/science/article/pii/S1084804525000773},
+author = {Andrej Čop and Blaž Bertalanič and Carolina Fortuna}
 }
 ```
 
