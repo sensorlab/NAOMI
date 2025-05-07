@@ -167,7 +167,7 @@ This project is licensed under the [BSD-3 Clause License](LICENSE) - see the LIC
 
 ## Citation
 
-Please cite our paper as follows:
+Please cite our [paper](https://www.sciencedirect.com/science/article/pii/S1084804525000773) as follows:
 
 ```
 @article{COP2025104180,
