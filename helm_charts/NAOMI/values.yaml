@@ -17,6 +17,9 @@ headGroupSpecs:
       requests:
         cpu: "2"
         memory: "6G"
+        
+rayClusterConfig:
+  enableInTreeAutoscaling: true
 
 workerGroups:
   amdGroup:

@@ -34,7 +34,7 @@ Skip this step if you already have a kubernetes cluster with required addons.
 
 ```bash
 helm repo add naomi_charts https://copandrej.github.io/NAOMI/
-helm install naom naomi_charts/NAOMI --version 0.1.0 --values values_example.yaml
+helm install naom naomi_charts/NAOMI --version 0.2.0 --values values_example.yaml
 ```
 
 > The app name 'naom' should not be longer than 4 characters, due to limitations in k8s service name length.
