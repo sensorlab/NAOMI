@@ -12,12 +12,21 @@ from .create_features import get_pod_template
 SYSTEM_IP = os.environ.get('SYSTEM_IP')
 
 @task(pod_template=get_pod_template())
-def deploy(model: keras.Sequential, num_replicas: int) -> None:
-    app = FastAPI(debug=True)
+def deploy(model: keras.Sequential, max_replicas: int, ray_workers: int = 1) -> None:
+    app = FastAPI(debug=True, timeout=1000)
 
-    @serve.deployment(name="qoe_prediction", num_replicas="auto",
-                      ray_actor_options={"num_cpus": 0, "num_gpus": 0, "memory": 0},
-                      autoscaling_config={"min_replicas": 1, "max_replicas": 1})  # , "resources": {"rasp":0.25}
+    @serve.deployment(
+    name="qoe_prediction",
+    max_ongoing_requests=2000,
+    ray_actor_options={"num_cpus": 1, "num_gpus": 0},
+    autoscaling_config={
+        "min_replicas": 1, 
+        "max_replicas": max_replicas,
+        "target_num_ongoing_requests_per_replica": 10,
+        "upscale_delay_s": 10,  # Default is 30 seconds
+        "downscale_delay_s": 30,  # Default is 600 seconds (10 minutes)
+    }
+    )
     @serve.ingress(app)
     class Qoe:
         def __init__(self):

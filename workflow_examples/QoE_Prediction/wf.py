@@ -9,10 +9,10 @@ mnist_model = typing.NamedTuple("mnist_model", [("model", keras.Sequential)])
 
 
 @workflow
-def qoe_train(n: int = 1, bt_s: int = 10) -> str:
+def qoe_train(n: int = 1, bt_s: int = 10, max_replicas: int=1) -> str:
     data_url = fetch_data_pd(N=n)
     model_uri = train(data_url=data_url, epochs=1, batch_size=bt_s)
-    dep = create_node(deploy, model=model_uri, num_replicas=1)
+    dep = create_node(deploy, model=model_uri, max_replicas=max_replicas)
     test = create_node(test_deploy)
     dep >> test
     mnist_model(model=model_uri)
