@@ -16,7 +16,7 @@ It is modular and can be adjusted to different use cases and requirements.
 
 ## Deployment
 
-### Instalation video
+### Installation video
 
 [![NAOMI MLOps Deployment Guide - Hands-On, Step-by-Step](https://img.youtube.com/vi/gQqQ1ivx44U/hqdefault.jpg)](https://www.youtube.com/watch?v=gQqQ1ivx44U)
 
