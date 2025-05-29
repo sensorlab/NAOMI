@@ -16,9 +16,14 @@ It is modular and can be adjusted to different use cases and requirements.
 
 ## Deployment
 
+### Instalation video
+
+[![NAOMI MLOps Deployment Guide - Hands-On, Step-by-Step](https://img.youtube.com/vi/gQqQ1ivx44U/hqdefault.jpg)](https://www.youtube.com/watch?v=gQqQ1ivx44U)
+
 #### Minimal requirements
 - 12 CPU cores
 - 32GB RAM
+- 100GB Available disk space
 
 #### 1. Kubernetes cluster 
 Skip this step if you already have a kubernetes cluster with required addons.
