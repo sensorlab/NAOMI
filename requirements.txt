@@ -6,7 +6,7 @@ flytekit>=1.5.0
 evaluate
 pillow
 requests
-tensorflow
+tensorflow == 2.15.1
 s3fs
 kubernetes
 pandas <= 2.1.4

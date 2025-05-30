@@ -16,9 +16,14 @@ It is modular and can be adjusted to different use cases and requirements.
 
 ## Deployment
 
+### Installation video
+
+[![NAOMI MLOps Deployment Guide - Hands-On, Step-by-Step](https://img.youtube.com/vi/gQqQ1ivx44U/hqdefault.jpg)](https://www.youtube.com/watch?v=gQqQ1ivx44U)
+
 #### Minimal requirements
 - 12 CPU cores
 - 32GB RAM
+- 100GB Available disk space
 
 #### 1. Kubernetes cluster 
 Skip this step if you already have a kubernetes cluster with required addons.
@@ -36,8 +41,12 @@ Skip this step if you already have a kubernetes cluster with required addons.
 helm repo add naomi_charts https://copandrej.github.io/NAOMI/
 helm install naom naomi_charts/NAOMI --version 0.2.0 --values values_example.yaml
 ```
+> [!IMPORTANT]
+> Helm version should be between 3.14 and 3.17
 
+> [!WARNING] 
 > The app name 'naom' should not be longer than 4 characters, due to limitations in k8s service name length.
+
 
 #### 3. Environment
 This step is only required for running example AI/ML workflows.
