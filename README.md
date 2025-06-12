@@ -18,7 +18,7 @@ It is modular and can be adjusted to different use cases and requirements.
 
 ### Installation video
 
-[![NAOMI MLOps Deployment Guide - Hands-On, Step-by-Step](https://img.youtube.com/vi/gQqQ1ivx44U/hqdefault.jpg)](https://www.youtube.com/watch?v=gQqQ1ivx44U)
+[![NAOMI MLOps Deployment Guide - Hands-On, Step-by-Step](https://img.youtube.com/vi/mA-iHkjI4GY/hqdefault.jpg)](https://www.youtube.com/watch?v=mA-iHkjI4GY)
 
 #### Minimal requirements
 - 12 CPU cores
