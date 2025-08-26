@@ -2,7 +2,7 @@
 fastapi[all] == 0.114.1
 uvicorn
 python-multipart
-mlflow == 2.16.0
+mlflow == 3.2.0
 
 # Add your own dependencies for model inference and data preprocessing
 # numpy

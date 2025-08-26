@@ -2,13 +2,8 @@ from typing import Annotated, List
 from flytekit import task, PodTemplate
 from kubernetes.client import V1PodSpec, V1Container, V1ResourceRequirements
 import mlflow
-import mlflow.keras
-import ray
+# import mlflow.keras
 import tensorflow as tf
-from ray import train, data
-from ray.train import ScalingConfig, RunConfig
-from ray.train.tensorflow import TensorflowTrainer
-from ray.train.tensorflow.keras import ReportCheckpointCallback
 import keras
 from keras import layers
 import s3fs
@@ -23,6 +18,11 @@ SYSTEM_IP = os.environ.get('SYSTEM_IP')
 
 @task(pod_template=get_pod_template())
 def retrain(train_ds: List[any]) -> keras.Sequential:
+    import ray
+    from ray import train, data
+    from ray.train import ScalingConfig, RunConfig
+    from ray.train.tensorflow import TensorflowTrainer
+    from ray.train.tensorflow.keras import ReportCheckpointCallback
     def build_model() -> tf.keras.Model:
         model = keras.Sequential(
             [

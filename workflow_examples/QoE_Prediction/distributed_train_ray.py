@@ -1,12 +1,7 @@
 from flytekit import task
 import mlflow
-import mlflow.keras
-import ray
+# import mlflow.keras # deprecated
 import tensorflow as tf
-from ray import train, data
-from ray.train import ScalingConfig, RunConfig
-from ray.train.tensorflow import TensorflowTrainer
-from ray.train.tensorflow.keras import ReportCheckpointCallback
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM
 import s3fs
@@ -22,6 +17,11 @@ SYSTEM_IP = os.environ.get('SYSTEM_IP')
 
 @task(pod_template=get_pod_template())
 def train(data_url: str, epochs: int = 1, batch_size: int = 10) -> Sequential:
+    import ray
+    from ray import train, data
+    from ray.train import ScalingConfig, RunConfig
+    from ray.train.tensorflow import TensorflowTrainer
+    from ray.train.tensorflow.keras import ReportCheckpointCallback
     def build_model() -> tf.keras.Model:
         model = Sequential()
         model.add(LSTM(units=150, activation="tanh", return_sequences=True, input_shape=input_shape))

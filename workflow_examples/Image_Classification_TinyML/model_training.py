@@ -3,8 +3,7 @@ import os
 import numpy as np
 
 import mlflow
-import mlflow.keras
-import ray
+# import mlflow.keras
 
 import tensorflow as tf
 from tensorflow import keras
@@ -54,6 +53,7 @@ def train(
     Train a ResNet-like model on the provided dataset using Ray,
     then log the model to MLflow and return the trained model object.
     """
+    import ray
 
     # Define a Ray-remote function to do the actual training
     @ray.remote(num_cpus=2) # note that keras will always use all cpus in the container, so this is only for ray placement

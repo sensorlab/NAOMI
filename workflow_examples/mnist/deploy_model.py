@@ -1,7 +1,5 @@
 from flytekit import task
 import keras
-import ray
-from ray import serve
 from fastapi import FastAPI, File, UploadFile, HTTPException
 import numpy as np
 import io
@@ -16,6 +14,8 @@ SYSTEM_IP = os.environ.get('SYSTEM_IP')
 
 @task(pod_template=get_pod_template())
 def deploy(model: keras.Sequential, num_replicas: int) -> None:
+    import ray
+    from ray import serve   
     app = FastAPI(debug=True)
 
     @serve.deployment(name="mnist", num_replicas=num_replicas, ray_actor_options={"num_cpus": 0, "num_gpus": 0}) # , "resources": {"rasp":0.25}

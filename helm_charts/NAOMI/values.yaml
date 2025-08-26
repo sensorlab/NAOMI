@@ -6,10 +6,10 @@ general:
 # Ray
 #
 ################################################
-rayVersion: "2.35.0"
+rayVersion: "2.48.0"
 headGroupSpecs:
   rayHead:
-    image: copandrej/ijs-custom:ray-amd64-ray235
+    image: copandrej/ijs-custom:ray-amd64-ray248
     resources:
       limits:
         cpu: "2"
@@ -29,7 +29,7 @@ workerGroups:
     rayStartParams:
       numCpus: "1"
     container:
-      image: copandrej/ijs-custom:ray-amd64-ray235
+      image: copandrej/ijs-custom:ray-amd64-ray248
       resources:
         limits:
           cpu: "1"
@@ -49,7 +49,7 @@ workerGroups:
     rayStartParams:
       numCpus: "1"
     container:
-      image: copandrej/ijs-custom:ray-aarch64-ray235
+      image: rayproject/ray:2.48.0 # BUG: can't build the arm image currently so NAOMI on arm doens't work
       resources:
         limits:
           cpu: "1"
@@ -85,21 +85,7 @@ mlflow:
         http: "31007"
     nodeSelector:
       kubernetes.io/arch: "amd64"
-  run:
-    nodeSelector:
-      kubernetes.io/arch: "amd64"
-
-  minio:
-    enabled: false
-
-  postgresql:
-    enabled: true
-    primary:
-      service:
-        ports:
-          postgresql: 5430
-
-  config:
+    # externalS3 new
     externalS3:
       host: "minio"
       port: 9000
@@ -108,6 +94,17 @@ mlflow:
       protocol: "http"
       bucket: "mlflow"
       serveArtifacts: true
+  run:
+    nodeSelector:
+      kubernetes.io/arch: "amd64"
+  minio:
+    enabled: false
+  postgresql:
+    enabled: true
+    primary:
+      service:
+        ports:
+          postgresql: 5430
 
 #################################################
 #
@@ -122,10 +119,15 @@ minio:
     type: NodePort
     ports:
       minio: 9000
-      minio-console: 9001
     nodePorts:
       api: "30085"
-      console: "30090"
+  console:
+    service:
+      type: NodePort
+      ports:
+        http: 9001
+      nodePorts:
+        http: "30090"
   persistence:
     enabled: true
     storageClass: "microk8s-hostpath"
@@ -214,6 +216,7 @@ flyte-binary:
 ################################################
 
 kube-prometheus-stack:
+  fullnameOverride: "prom"
   enabled: false
   grafana:
     grafana.ini:

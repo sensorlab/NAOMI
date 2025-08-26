@@ -2,9 +2,7 @@ import os
 import numpy as np
 
 import mlflow
-import mlflow.keras
-import ray
-from ray import remote
+# import mlflow.keras
 from flytekit import task
 
 import tensorflow as tf
@@ -52,7 +50,8 @@ def train(
     Train a MobileNetV1 model for Visual Wake Words classification (2 classes),
     log metrics to MLflow, and return the trained Keras model.
     """
-
+    import ray
+    from ray import remote
     @ray.remote(num_cpus=2) # note that keras will always use all cpus in the container, so this is only for ray placement
     def ray_training(
         _x_train: np.ndarray,

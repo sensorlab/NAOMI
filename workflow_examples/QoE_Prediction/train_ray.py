@@ -1,7 +1,6 @@
 from flytekit import task
 import mlflow
-import mlflow.keras
-import ray
+# import mlflow.keras # deprecated
 import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
@@ -19,6 +18,7 @@ from .create_features import get_pod_template
 
 @task(pod_template=get_pod_template())
 def train(data_url: str, epochs: int = 1, batch_size: int = 10) -> keras.Sequential:
+    import ray #ray imports outside the flyte task dont work correctly BUG
 
     @ray.remote(resources={"vm": 1}, num_cpus=1)
     def ray_training(x, y, epochs: int):

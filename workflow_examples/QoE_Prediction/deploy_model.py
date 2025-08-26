@@ -1,11 +1,8 @@
 import numpy as np
 from flytekit import task
 import keras
-import ray
-from ray import serve
 from fastapi import FastAPI, HTTPException
 import os
-
 from .create_features import get_pod_template
 
 # Get system ip from container environment variable set with pyflyte --env SYSTEM_IP=xxx
@@ -13,6 +10,8 @@ SYSTEM_IP = os.environ.get('SYSTEM_IP')
 
 @task(pod_template=get_pod_template())
 def deploy(model: keras.Sequential, max_replicas: int, ray_workers: int = 1) -> None:
+    import ray
+    from ray import serve
     app = FastAPI(debug=True, timeout=1000)
 
     @serve.deployment(
