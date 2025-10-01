@@ -1,4 +1,4 @@
-apiVersion: ray.io/v1alpha1
+apiVersion: ray.io/v1
 kind: RayService
 metadata:
   name: ray-serve
@@ -56,7 +56,7 @@ spec:
                 - name: RAY_GRAFANA_HOST
                   value: http://{{ .Release.Name }}-grafana
                 - name: RAY_PROMETHEUS_HOST
-                  value: http://{{ .Release.Name }}-kube-prometheus-stack-prometheus:9090
+                  value: http://prom-prometheus:9090
           volumes:
             - name: ray-logs
               emptyDir: {}

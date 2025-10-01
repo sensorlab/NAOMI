@@ -1,4 +1,4 @@
-{{ if index .Values "kube-prometheus-stack" "enabled" }}
+{{- if index .Values "kube-prometheus-stack" "enabled" }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,5 +6,9 @@ metadata:
   labels:
     grafana_dashboard: "1"
 data:
-  kubernetes.json: {{ .Files.Get "grafana-dashboards/default_grafana_dashboard.json" | toJson | indent 4 }}
-  {{ end }}
+{{- $files := .Files.Glob "grafana-dashboards/*.json" }}
+{{- range $path, $file := $files }}
+  {{ base $path }}: |
+{{ printf "%s" $file | indent 4 }}
+{{- end }}
+{{- end }}

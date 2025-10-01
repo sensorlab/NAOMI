@@ -5,9 +5,6 @@ from fastapi import FastAPI, HTTPException
 import tensorflow as tf
 from tensorflow import keras
 
-import ray
-from ray import serve
-
 from flytekit import task
 from kubernetes.client import V1ResourceRequirements, V1Container, V1PodSpec
 from flytekit import PodTemplate
@@ -40,7 +37,8 @@ def deploy(model: keras.Model, num_replicas: int = 1) -> None:
     Deploy the trained MobileNetV1 model for VWW using Ray Serve.
     Expose a FastAPI endpoint to handle predictions.
     """
-
+    import ray
+    from ray import serve
     app = FastAPI(debug=True)
 
     @serve.deployment(

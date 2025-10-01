@@ -5,8 +5,6 @@ from kubernetes.client import V1ResourceRequirements, V1Container, V1PodSpec
 from flytekit import task, PodTemplate
 from fastapi import FastAPI, HTTPException
 from flytekit import task
-import ray
-from ray import serve
 
 import tensorflow as tf
 from tensorflow import keras
@@ -44,6 +42,9 @@ def deploy(model: any, num_replicas: int = 1) -> None:
     Deploy the trained Keras model as a Ray Serve deployment,
     exposing a FastAPI endpoint for inference.
     """
+
+    import ray
+    from ray import serve
 
     # Create a FastAPI application for your deployment
     app = FastAPI(debug=True)

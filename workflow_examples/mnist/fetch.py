@@ -3,8 +3,6 @@ from flytekit import task, PodTemplate
 import numpy as np
 import keras
 from typing import Tuple, Annotated, Dict, List
-import ray
-from ray import data
 
 from kubernetes.client import V1ResourceRequirements, V1Container, V1PodSpec
 from flytekit import kwtypes
@@ -44,6 +42,8 @@ def fetch_data() -> Tuple[
         Annotated[List[any], kwtypes(x_test=str)],
         Annotated[List[any], kwtypes(y_test=str)],]:
 
+    import ray
+    from ray import data
     s3_fs = s3fs.S3FileSystem(
         key='minio',
         secret='miniostorage',
