@@ -39,7 +39,7 @@ Skip this step if you already have a kubernetes cluster with required addons.
 
 ```bash
 helm repo add naomi_charts https://copandrej.github.io/NAOMI/
-helm install naomi naomi_charts/NAOMI --version 0.3.1 --values values_example.yaml -n your_namespace
+helm install naomi naomi_charts/NAOMI --version 0.3.2 --values values_example.yaml -n your_namespace
 ```
 > [!IMPORTANT]
 > Helm version should be between 3.14 and 3.17

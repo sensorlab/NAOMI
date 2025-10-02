@@ -74,6 +74,17 @@ kuberay-operator:
 ################################################
 mlflow:
   enabled: true
+  image:
+    repository: bitnamilegacy/mlflow # Fix for bitnami deprecating support for their docker images https://github.com/bitnami/charts/issues/35164
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+  waitContainer:
+    image:
+      repository: bitnamilegacy/os-shell
+  gitImage:
+    image:
+      repository: bitnamilegacy/git
   tracking:
     auth:
       enabled: false
@@ -105,6 +116,8 @@ mlflow:
       service:
         ports:
           postgresql: 5430
+    image:
+      repository: bitnamilegacy/postgresql 
 
 #################################################
 #
@@ -115,6 +128,8 @@ mlflow:
 
 minio:
   enabled: true
+  image:
+    repository: bitnamilegacy/minio # Fix for bitnami deprecating support for their docker images https://github.com/bitnami/charts/issues/35164
   service:
     type: NodePort
     ports:
