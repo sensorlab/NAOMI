@@ -39,7 +39,7 @@ Skip this step if you already have a kubernetes cluster with required addons.
 
 ```bash
 helm repo add naomi_charts https://copandrej.github.io/NAOMI/
-helm install naomi naomi_charts/NAOMI --version 0.4.0 --values values_example.yaml -n your_namespace
+helm install naomi naomi_charts/NAOMI --version 0.4.1 --values values_example.yaml -n your_namespace
 ```
 
 
@@ -143,6 +143,59 @@ mlflow.pytorch.log_model(model, "CNN_spectrum", registered_model_name="CNN_spect
 - ML Models as a Service can be instantiated and configured using helm values overrides, specifying model version, docker image, service port, number of replicas, and other configurations required by the service `helm_charts/SEMR_inference/values-overrides-*.yaml`.
 
 - When a new model version is uploaded to MLflow, inference service can be re-instantiated using new configurations (values overrides). Docker images don't require any additional modification when models are retrained.
+
+## NAOMI MCP
+
+NAOMI includes an optional [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that lets AI coding agents interact directly with the Kubernetes cluster.
+When enabled (`naomiMcp.enabled: true` in your values file), the MCP server is deployed as a pod and exposed via a NodePort.
+
+The MCP server exposes full control over the cluster on nodeport service.
+
+The MCP endpoint is available at:
+```
+http://<node_ip>:31008/mcp
+```
+
+### Connecting VS Code (GitHub Copilot)
+
+Add the following to your VS Code `settings.json` (or workspace `.vscode/settings.json`):
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "naomi": {
+        "type": "http",
+        "url": "http://<node_ip>:31008/mcp"
+      }
+    }
+  }
+}
+```
+
+
+### Connecting Claude Code
+
+Run the following command to register the MCP server:
+
+```bash
+claude mcp add --transport http naomi http://<node_ip>:31008/mcp
+```
+
+### Connecting Cursor
+
+Add the following to your Cursor MCP configuration (`.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "naomi": {
+      "url": "http://<node_ip>:31008/mcp"
+    }
+  }
+}
+```
+
 
 ## Repository structure
 

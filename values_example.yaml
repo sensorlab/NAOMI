@@ -86,6 +86,13 @@ flyte-binary:
           memory: 4Gi
 
 
+# NAOMI MCP Server
+# When enabled, you can connect AI coding assistants (VS Code Copilot, Claude Code, Cursor, etc.)
+# to the cluster via the MCP endpoint: http://<node_ip>:31008/mcp
+# MCP Server has generous premisions and can damage the cluster, enable at your own risk
+naomiMcp:
+  enabled: false
+
 # promethes&grafana
 kube-prometheus-stack:
   enabled: true

@@ -52,6 +52,11 @@ nodes:
     hostPort: 30002
     protocol: TCP
     listenAddress: "0.0.0.0"
+  # NAOMI MCP Server
+  - containerPort: 31008
+    hostPort: 31008
+    protocol: TCP
+    listenAddress: "0.0.0.0"
   # Flyte
   - containerPort: 31081
     hostPort: 31081
@@ -119,6 +124,9 @@ flyte-binary:
        
 minio:
   enabled: true
+
+naomiMcp:
+  enabled: true
      
 kube-prometheus-stack:
   enabled: true
@@ -128,10 +136,10 @@ kube-prometheus-stack:
         enabled: true
 EOF
 
-# Install NAOMI-0.4.0 with a Helm command in a namespace called "project"
+# Install NAOMI-0.4.1 with a Helm command in a namespace called "project"
 helm repo add naomi_charts https://copandrej.github.io/NAOMI/
 helm repo update
-helm install naomi naomi_charts/NAOMI --version 0.4.0 --values values-kind.yaml -n project --create-namespace
+helm install naomi naomi_charts/NAOMI --version 0.4.1 --values values-kind.yaml -n project --create-namespace
 
 rm values-kind.yaml
 echo "✅ NAOMI deployment is in progress. This will take a few minutes. You can check the status of the pods with: kubectl get pods -n project -w"
@@ -141,3 +149,4 @@ echo "Flyte: http://$HOST_IP:31082/"
 echo "MinIO: http://$HOST_IP:30090/"
 echo "Grafana: http://$HOST_IP:30000/"
 echo "MLflow: http://$HOST_IP:31007/#/models"
+echo "NAOMI MCP: http://$HOST_IP:31008/mcp"
