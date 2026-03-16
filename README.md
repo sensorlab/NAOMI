@@ -27,7 +27,7 @@ It is modular and can be adjusted to different use cases and requirements.
 
 #### 1. Kubernetes cluster 
 Skip this step if you already have a kubernetes cluster with required addons.
-- Install microk8s with addons: `dns`, `storage`, `ingress` or run install script `./helper_scripts/system-install.sh`
+- Install microk8s with addons: `dns`, `storage`, or run install script `./helper_scripts/system-install.sh`
 
 - (Optional) Run install script `./helper_scripts/rasp-install.sh` on any raspberry pi node you want to join to the cluster.
 - (Optional) Ansible playbook for installing microk8s on multiple nodes: `./helper_scripts/microk8s_ansible/` (requires ssh access and ansible)
@@ -39,15 +39,23 @@ Skip this step if you already have a kubernetes cluster with required addons.
 
 ```bash
 helm repo add naomi_charts https://copandrej.github.io/NAOMI/
-helm install naomi naomi_charts/NAOMI --version 0.3.2 --values values_example.yaml -n your_namespace
+helm install naomi naomi_charts/NAOMI --version 0.4.1 --values values_example.yaml -n your_namespace
 ```
-> [!IMPORTANT]
-> Helm version should be between 3.14 and 3.17
 
 
 #### 3. Environment
 This step is only required for running example AI/ML workflows.
-- Run config script `./helper_scripts/env-prepare.sh` on VM to install requirements and connect flytectl to the cluster for running AI/ML workflows.
+The project uses [uv](https://docs.astral.sh/uv/) for dependency management. Install uv and sync dependencies:
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv sync
+```
+Then connect flytectl to the cluster:
+```bash
+curl -sL https://ctl.flyte.org/install | sudo bash -s -- -b /usr/local/bin
+flytectl config init --host=<CLUSTER_IP>:31081 --console=<CLUSTER_IP>:31082 --insecure
+```
+Alternatively, run `./helper_scripts/env-prepare.sh`.
 
 ## Configurations
 
@@ -69,7 +77,7 @@ After the system is deployed, users can access the components through the follow
 System should be deployed in a closed network as access to dashboards and APIs is not secured.
 
 #### Dashboards
-- Ray: `http://<node_ip>/ray/`
+- Ray: `http://<node_ip>:30265/`
 - Flyte: `http://<node_ip>:31082/`
 - MinIO: `http://<node_ip>:30090/`
 - Grafana: `http://<node_ip>:30000/`
@@ -95,7 +103,7 @@ Quality of Experience (QoE) prediction is a workflow example adjusted from O-RAN
 1. Populate MinIO with file `insert.py` in `workflow_examples/qoe_prediction/populate_minio/` (Change IP endpoint of MinIO in the script).
 2. Run the workflow with Flyte CLI; --bt_s is batch size, --n is dataset size (1, 10, 100):
     ```bash
-   pyflyte run --remote --env SYSTEM_IP=$(hostname -I | awk '{print $1}') --image copandrej/flyte_workflow:8 wf.py qoe_train --bt_s 10 --n 1
+   pyflyte run --remote --env SYSTEM_IP=$(hostname -I | awk '{print $1}') --image copandrej/flyte_workflow:9 wf.py qoe_train --bt_s 10 --n 1
    ```
 3. Monitor the progress on dashboards.
 
@@ -106,7 +114,7 @@ A workflow example for distributed data processing, distributed model training, 
 1. Populate MinIO with file `populate.py` in `workflow_examples/mnist/populate_minio/` (Change IP endpoint of MinIO in the script).
 2. Run the workflow with Flyte CLI from `workflow_examples/mnist/` directory:
     ```bash
-    pyflyte run --remote --env SYSTEM_IP=$(hostname -I | awk '{print $1}') --image copandrej/flyte_workflow:8 wf.py mnist_train
+    pyflyte run --remote --env SYSTEM_IP=$(hostname -I | awk '{print $1}') --image copandrej/flyte_workflow:9 wf.py mnist_train
 
     ```
 3. Monitor the progress on dashboards.
@@ -135,6 +143,59 @@ mlflow.pytorch.log_model(model, "CNN_spectrum", registered_model_name="CNN_spect
 - ML Models as a Service can be instantiated and configured using helm values overrides, specifying model version, docker image, service port, number of replicas, and other configurations required by the service `helm_charts/SEMR_inference/values-overrides-*.yaml`.
 
 - When a new model version is uploaded to MLflow, inference service can be re-instantiated using new configurations (values overrides). Docker images don't require any additional modification when models are retrained.
+
+## NAOMI MCP
+
+NAOMI includes an optional [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that lets AI coding agents interact directly with the Kubernetes cluster.
+When enabled (`naomiMcp.enabled: true` in your values file), the MCP server is deployed as a pod and exposed via a NodePort.
+
+The MCP server exposes full control over the cluster on nodeport service.
+
+The MCP endpoint is available at:
+```
+http://<node_ip>:31008/mcp
+```
+
+### Connecting VS Code (GitHub Copilot)
+
+Add the following to your VS Code `settings.json` (or workspace `.vscode/settings.json`):
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "naomi": {
+        "type": "http",
+        "url": "http://<node_ip>:31008/mcp"
+      }
+    }
+  }
+}
+```
+
+
+### Connecting Claude Code
+
+Run the following command to register the MCP server:
+
+```bash
+claude mcp add --transport http naomi http://<node_ip>:31008/mcp
+```
+
+### Connecting Cursor
+
+Add the following to your Cursor MCP configuration (`.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "naomi": {
+      "url": "http://<node_ip>:31008/mcp"
+    }
+  }
+}
+```
+
 
 ## Repository structure
 
